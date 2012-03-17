@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <events>
-    <event name="touchSample" type="touch" xy="30/50" action="DOWN_UP" />
+    <event name="touchSample" type="touch" xy="30/50" action="DOWN_AND_UP" />
 
-    <event name="keyPressSample" type="press" arg="A" action="DOWN_UP" />
+    <event name="keyPressSample" type="press" arg="A" action="DOWN" />
 
     <event name="dragSample" type="drag" xy="30/50/200/50" duration="0.3" />
 
