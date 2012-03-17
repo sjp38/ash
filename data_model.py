@@ -6,7 +6,7 @@ class Event:
         self.evtType = evtType
         self.xys = xys  # list of int.
         self.duration = duration    # float
-        self.action = action    # one of UP, DOWN, DOWN_UP
+        self.action = action    # one of UP, DOWN, DOWN_AND_UP
         self.arg = arg
 
     @staticmethod
