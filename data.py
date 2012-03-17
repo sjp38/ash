@@ -1,3 +1,6 @@
+# Module for data control.
+# Author SeongJae Pakr <sj38.park@gmail.com>
+
 from xml.etree.ElementTree import Element, SubElement, ElementTree, fromstring, tostring
 from data_model import Event, EventStream, Binding, BindingSet
 import log
@@ -191,7 +194,7 @@ def saveBinding(filePath):
         element = Element(BINDING_ELEMENT)
         element.attrib[BINDING_NAME] = binding.name
         element.attrib[BINDING_KEYINPUT] = binding.keyInput
-        element.attrib[BINDING_EVENT] = binding.keyInput
+        element.attrib[BINDING_EVENT] = binding.events
         root.append(element)
     indent(root)
     f = open(filePath, "w")
@@ -204,15 +207,15 @@ def addBinding(binding):
     if len(bindingSets) <= 0:
         initBindingSet()
     global currentBindingSet
-    bindingSets[currentBindingSet][binding.keyInput] = binding
+    bindingSets[currentBindingSet].bindings[binding.keyInput] = binding
 
 def removeBinding(bindingName):
     target = bindings[bindingName]
     del bindings[bindingName]
 
     for bindingSet in bindingSets.values():
-        if bindingSet.has_key(target.keyInput):
-            del bindingSet[target.keyInput]
+        if bindingSet.bindings.has_key(target.keyInput):
+            del bindingSet.bindings[target.keyInput]
 
 def listBinding(onlyNames):
     if onlyNames:
@@ -231,7 +234,7 @@ INIT_BINDING_SET = "main"
 def initBindingSet():
     global currentBindingSet
     currentBindingSet = INIT_BINDING_SET
-    bindingSets[currentBindingSet] = {}
+    bindingSets[currentBindingSet] = BindingSet(currentBindingSet, {})
 
 def loadBindingSet(filePath):
     tree = ElementTree()
@@ -292,6 +295,12 @@ def listBindingSet(onlyNames):
     if onlyNames:
         return bindingSets.keys()
     return bindingSets.values()
+
+def switchBindingSet(name):
+    if bindingSets.has_key(name):
+        currentBindingSet = name
+    else:
+        return "No such binding set"
 
 
 
@@ -501,9 +510,9 @@ def testSaveEvent():
         return False
 
     events.clear()
-    test = Event("touchSample", "touch", [30,50], 0.0, "DOWN_UP")
+    test = Event("touchSample", "touch", [30,50], 0.0, "DOWN_AND_UP")
     events[test.name] = test
-    test = Event("keyPressSample", "press", [], 0.0, "DOWN_UP", "A")
+    test = Event("keyPressSample", "press", [], 0.0, "DOWN", "A")
     events[test.name] = test
     test = Event("dragSample", "drag", [30,50,200,50], 0.3, "")
     events[test.name] = test
@@ -530,14 +539,14 @@ def testSaveEvent():
 def testLoadEvent():
     print "testLoadEvent"
     loadEvent("event_sample.xml")
-    test = Event("touchSample", "touch", [30,50], 0.0, "DOWN_UP")
+    test = Event("touchSample", "touch", [30,50], 0.0, "DOWN_AND_UP")
     loaded = events.get("touchSample")
     if test.__str__() != loaded.__str__():
         print loaded, test
         print "1"
         return False
 
-    test = Event("keyPressSample", "press", [], 0.0, "DOWN_UP", "A")
+    test = Event("keyPressSample", "press", [], 0.0, "DOWN", "A")
     loaded = events.get("keyPressSample")
     if test.__str__() != loaded.__str__():
         print loaded, test
@@ -577,7 +586,7 @@ def testLoadEvent():
 
 def testAddEvent():
     print "testAddEvent"
-    test = Event("test", "touch", [30, 50], 0, "DOWN_UP")
+    test = Event("test", "touch", [30, 50], 0, "DOWN_AND_UP")
     addEvent(test)
     added = events.get("test")
     if test.__str__() != added.__str__():
@@ -591,7 +600,7 @@ def testAddEvent():
 
 def testEvent():
     print "test event"
-    print Event("test", "touch", [30, 50], 0, "DOWN_UP")
+    print Event("test", "touch", [30, 50], 0, "DOWN_AND_UP")
     print ""
     return True
 
