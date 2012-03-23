@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bindings>
+    <binding action="cmd&quot;switchBindingset default&quot;"
+        keyInput="Ctrl-S" name="switchBindingsetTodefault" />
+    <binding action="cmd&quot;switchBindingset googleKeyboard&quot;"
+       keyInput="Ctrl-S" name="switchBindingsetToGoogleKeyboard" />
+    <binding action="evflingUp" keyInput="Ctrl-UP" name="flingUp" />
+    <binding action="evflingDown" keyInput="Ctrl-DOWN" name="flingDown" />
+    <binding action="evflingLeft" keyInput="Ctrl-LEFT" name="flingLeft" />
+    <binding action="evflingRight" keyInput="Ctrl-RIGHT" name="flingRight" />
+    <binding action="evUpper" keyInput="SHIFT" name="Upper" />
+    <binding action="evA" keyInput="A" name="A" />
+    <binding action="evB" keyInput="B" name="B" />
+    <binding action="evC" keyInput="C" name="C" />
+    <binding action="evD" keyInput="D" name="D" />
+    <binding action="evE" keyInput="E" name="E" />
+    <binding action="evF" keyInput="F" name="F" />
+    <binding action="evG" keyInput="G" name="G" />
+    <binding action="evH" keyInput="H" name="H" />
+    <binding action="evI" keyInput="I" name="I" />
+    <binding action="evJ" keyInput="J" name="J" />
+    <binding action="evK" keyInput="K" name="K" />
+    <binding action="evL" keyInput="L" name="L" />
+    <binding action="evM" keyInput="M" name="M" />
+    <binding action="evN" keyInput="N" name="N" />
+    <binding action="evO" keyInput="O" name="O" />
+    <binding action="evP" keyInput="P" name="P" />
+    <binding action="evQ" keyInput="Q" name="Q" />
+    <binding action="evR" keyInput="R" name="R" />
+    <binding action="evS" keyInput="S" name="S" />
+    <binding action="evT" keyInput="T" name="T" />
+    <binding action="evU" keyInput="U" name="U" />
+    <binding action="evV" keyInput="V" name="V" />
+    <binding action="evW" keyInput="W" name="W" />
+    <binding action="evX" keyInput="X" name="X" />
+    <binding action="evY" keyInput="Y" name="Y" />
+    <binding action="evZ" keyInput="Z" name="Z" />
+</bindings>

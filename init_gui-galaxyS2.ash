@@ -1,0 +1,7 @@
+loadEvent default_data/480x800-galaxyS2/dft_event.xml
+loadBinding default_data/dft_binding.xml
+loadBindingset default_data/dft_bindingset.xml
+switchBindingset default
+connectDevice
+startGui test_xmls/gui_keylayout_sample.xml
+startGuiAutoRefresh

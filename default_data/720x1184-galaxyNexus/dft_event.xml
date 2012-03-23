@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<events>
+    <event name="Q" type="touch" xy="38/812" action="DOWN_AND_UP" />
+    <event name="W" type="touch" xy="114/812" action="DOWN_AND_UP" />
+    <event name="E" type="touch" xy="180/812" action="DOWN_AND_UP" />
+    <event name="R" type="touch" xy="252/812" action="DOWN_AND_UP" />
+    <event name="T" type="touch" xy="324/812" action="DOWN_AND_UP" />
+    <event name="Y" type="touch" xy="393/812" action="DOWN_AND_UP" />
+    <event name="U" type="touch" xy="474/812" action="DOWN_AND_UP" />
+    <event name="I" type="touch" xy="542/812" action="DOWN_AND_UP" />
+    <event name="O" type="touch" xy="616/812" action="DOWN_AND_UP" />
+    <event name="P" type="touch" xy="684/812" action="DOWN_AND_UP" />
+
+    <event name="A" type="touch" xy="67/906" action="DOWN_AND_UP" />
+    <event name="S" type="touch" xy="148/906" action="DOWN_AND_UP" />
+    <event name="D" type="touch" xy="220/906" action="DOWN_AND_UP" />
+    <event name="F" type="touch" xy="290/906" action="DOWN_AND_UP" />
+    <event name="G" type="touch" xy="362/906" action="DOWN_AND_UP" />
+    <event name="H" type="touch" xy="430/906" action="DOWN_AND_UP" />
+    <event name="J" type="touch" xy="500/906" action="DOWN_AND_UP" />
+    <event name="K" type="touch" xy="570/906" action="DOWN_AND_UP" />
+    <event name="L" type="touch" xy="640/906" action="DOWN_AND_UP" />
+
+    <event name="Z" type="touch" xy="150/1012" action="DOWN_AND_UP" />
+    <event name="X" type="touch" xy="220/1012" action="DOWN_AND_UP" />
+    <event name="C" type="touch" xy="290/1012" action="DOWN_AND_UP" />
+    <event name="V" type="touch" xy="360/1012" action="DOWN_AND_UP" />
+    <event name="B" type="touch" xy="430/1012" action="DOWN_AND_UP" />
+    <event name="N" type="touch" xy="500/1012" action="DOWN_AND_UP" />
+    <event name="M" type="touch" xy="570/1012" action="DOWN_AND_UP" />
+
+    <event name="Upper" type="touch" xy="50/1010" action="DOWN_AND_UP" />
+
+    <event name="flingLeft" type="drag" xy="40/500/600/500" duration="0.3" />
+    <event name="flingRight" type="drag" xy="600/500/40/500" duration="0.3" />
+    <event name="flingUp" type="drag" xy="350/650/350/90" duration="0.3" />
+    <event name="flingDown" type="drag" xy="350/90/350/650" duration="0.3" />
+</events>
