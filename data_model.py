@@ -14,7 +14,11 @@ class Event:
         return Event(e.name, e.evtType, e.xys, e.duration, e.action, e.arg)
 
     def __str__(self):
-        return "name : %s, type : %s, xys : %s, duration : %s, action : %s, arg : %s" % (
+        return "[Event] name : %s, type : %s, xys : %s, duration : %s, action : %s, arg : %s" % (
+                self.name, self.evtType, self.xys, self.duration, self.action, self.arg)
+
+    def __repr__(self):
+        return "[Event] name : %s, type : %s, xys : %s, duration : %s, action : %s, arg : %s" % (
                 self.name, self.evtType, self.xys, self.duration, self.action, self.arg)
 
 class EventStream:
@@ -28,22 +32,30 @@ class EventStream:
         return EventStream(es.name, es.items)
 
     def __str__(self):
-        return "name : %s, items : %s" % (
+        return "[EventStream]name : %s, items : %s" % (
+                self.name, self.items)
+
+    def __repr__(self):
+        return "[EventStream]name : %s, items : %s" % (
                 self.name, self.items)
 
 class Binding:
-    def __init__(self, name, keyInput, eventstream):
+    def __init__(self, name, keyInput, action):
         self.name = name
         self.keyInput = keyInput # string.
-        self.events = eventstream
+        self.action = action
 
     @staticmethod
     def clone(b):
-        return Binding(b.name, b.keyInput, b.events)
+        return Binding(b.name, b.keyInput, b.action)
 
     def __str__(self):
-        return "name : %s, keyInput : %s, events : %s" % (
-                self.name, self.keyInput, self.events)
+        return "[Binding] name : %s, keyInput : %s, action : %s" % (
+                self.name, self.keyInput, self.action)
+
+    def __repr__(self):
+        return "[Binding] name : %s, keyInput : %s, action : %s" % (
+                self.name, self.keyInput, self.action)
 
 class BindingSet:
     def __init__(self, name, bindings):
@@ -55,7 +67,15 @@ class BindingSet:
         return BindingSet(bs.name, bs.bindings)
 
     def __str__(self):
-        result = "name : %s, bindings : [" % self.name
+        result = "[BindingSet]name : %s, bindings : [" % self.name
+        for key in self.bindings.keys():
+            binding = self.bindings[key]
+            result += "%s," % binding
+        result += "]"
+        return result 
+
+    def __repr__(self):
+        result = "[BindingSet]name : %s, bindings : [" % self.name
         for key in self.bindings.keys():
             binding = self.bindings[key]
             result += "%s," % binding

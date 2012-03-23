@@ -1,0 +1,3 @@
+listDevices
+loadEvent test_xmls/event_sample.xml
+sleep 0.3

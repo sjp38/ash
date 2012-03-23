@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bindings>
+    <binding action="essingleEventStream" keyInput="HOME" name="Home" />
+    <binding action="evdragSample" keyInput="Ctrl-K" name="ControlCombination" />
+    <binding action="esmultipleEvents" keyInput="Alt-C" name="AltCombination" />
+    <binding action="evtouchSample" keyInput="A" name="simpleKey" />
+</bindings>

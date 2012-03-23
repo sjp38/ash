@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<eventstreams>
+    <eventstream name="multipleEvents">
+        <item interval="0.0" name="evkeyPressSample" />
+        <item interval="0.5" name="evtouchSample" />
+        <item interval="0.5" name="evdragSample" />
+    </eventstream>
+    <eventstream name="mixedEventStreams">
+        <item interval="0.0" name="evkeyPressSample" />
+        <item interval="0.5" name="esmultipleEvents" />
+    </eventstream>
+    <eventstream name="singleEventStream">
+        <item interval="0.0" name="essingleEvent" />
+    </eventstream>
+    <eventstream name="multipleEventStreams">
+        <item interval="0.0" name="essingleEvent" />
+        <item interval="0.5" name="esmultipleEvents" />
+        <item interval="0.5" name="essingleEventStream" />
+    </eventstream>
+    <eventstream name="singleEvent">
+        <item interval="0.0" name="evtouchSample" />
+    </eventstream>
+</eventstreams>
