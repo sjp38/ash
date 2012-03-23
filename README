@@ -1,0 +1,12 @@
+Ash is a program for Android device control from desktop using CLI / GUI.
+
+# License
+GPL v3.
+Anyone can use codes of Ash everywhere. But, should follow limitation of GPL v3.
+
+
+# How to use
+0. You should install Android SDK. Android SDK's tools directory should be exist in your PATH.
+1. $ ./ash.py {init_gui-galaxyNexus | init_gui_galaxyS2}
+
+Author : SeongJae Park <sj38.park@gmail.com>
