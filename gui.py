@@ -104,8 +104,10 @@ def getContentPane():
 
         deviceScrMouseListener = DeviceScrMouseListener()
         deviceScrKeyListener = DeviceScrKeyListener()
+
         deviceScreen.addMouseListener(deviceScrMouseListener)
         deviceScreen.addMouseMotionListener(deviceScrMouseListener)
+        deviceScreen.addMouseWheelListener(deviceScrMouseListener)
         deviceScreen.addKeyListener(deviceScrKeyListener)
         deviceScreen.setFocusable(True)
         devScrPanel = JPanel()
@@ -311,7 +313,17 @@ class DeviceScrMouseListener(MouseInputAdapter):
         xy = self.recalXY(event.getX(), event.getY())
         global axisLabel
         axisLabel.setText("%04d / %04d" % (xy[0], xy[1]))
-        pass
+
+    def mouseWheelMoved(self, event):
+        notches = event.getWheelRotation()
+        direction = ""
+        if notches < 0:
+            direction = "UP"
+        else:
+            direction = "DOWN"
+        command = cmd.Cmd("execInstEvent", ["press"],
+                ["argDPAD_%s" % direction, "actDOWN_AND_UP"])
+        cmd.CmdExecutor.execute(command)
 
 class DeviceScrKeyListener(KeyListener):
     metaKeyState = {"SHIFT":False, "ALT":False, "CTRL":False}
