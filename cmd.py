@@ -64,6 +64,16 @@ def listDevices():
     devices = device_control.getConnectedDevices()
     return devices
 
+def connectDevice(args):
+    if len(args) > 0:
+        return device_control.connect(args[0])
+    devices = device_control.getConnectedDevices()
+    if len(devices) <= 0:
+        return "No connected device."
+    return device_control.connect(devices[0])
+
+
+
 def addEventStream(args, options):
     name = args[0] 
     del args[0]
@@ -253,9 +263,8 @@ def execScript(filePath):
 
 class CmdExecutor:
     CMD_MAPS = {
-            "listDevices": lambda args, opts: listDevices(),
-            "connectDevice": lambda args, opts: device_control.connect(args[0]),
-
+            "listDevices": lambda args, opts: device_control.getConnectedDevices(),
+            "connectDevice": lambda args, opts: connectDevice(args),
             "startGui": lambda args, opts: gui.start(args[0]),
             "startGuiAutoRefresh": lambda args, opts: gui.startAutoRefresh(True),
             "stopGuiAutoRefresh": lambda args, opts: gui.startAutoRefresh(False),
