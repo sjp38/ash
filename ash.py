@@ -16,8 +16,7 @@ def printResult(result):
         for subResult in result:
             if subResult.__class__ == list:
                 printResult(subResult)
-            else:
-                print subResult
+            elif subResult: print subResult
     else:
         print result
 

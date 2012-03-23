@@ -65,7 +65,7 @@ def loadEvent(filePath):
         name = child.get(EVENT_NAME, "")
         evtType = child.get(EVENT_TYPE, "")
         xy = child.get(EVENT_XYS, "")
-        duration = child.get(EVENT_DURATION, 0.0)
+        duration = float(child.get(EVENT_DURATION, 0.0))
         action = child.get(EVENT_ACTION, "")
         arg = child.get(EVENT_ARG, "")
         if xy == '':
@@ -187,6 +187,8 @@ def loadBinding(filePath):
         event = elem.get(BINDING_ACTION, "")
         binding = Binding(name, keyInput, event)
         bindings[binding.name] = binding
+    if len(bindingSets) <= 0:
+        initBindingSet()
 
 def saveBinding(filePath):
     root = Element(BINDING_ROOT_ELEMENT)
@@ -300,6 +302,7 @@ def listBindingSet(onlyNames):
     return bindingSets.values()
 
 def switchBindingSet(name):
+    global currentBindingSet
     if bindingSets.has_key(name):
         currentBindingSet = name
     else:

@@ -65,7 +65,8 @@ def start(layoutFile):
     frame.setVisible(True)
 
 def stop():
-    frame.setVisible(False)
+    startAutoRefresh(False)
+    frame.dispose()
     pass
 
 def startAutoRefresh(start):
@@ -135,7 +136,6 @@ def getContentPane():
 def windowClosing():
     global refreshDeviceScr
     refreshDeviceScr = False
-    print "window close!"
 
 def handleZoominBtn(event):
     global scrZoomRatio
@@ -216,9 +216,10 @@ def notifyResult(results):
         for result in results:
             if result.__class__ == list:
                 notifyResult(result)
-            terminalResult.append(result)
+            elif result:
+                terminalResult.append("\n" + "%s" % result)
     else:
-        terminalResult.append(results)
+        terminalResult.append("\n" + "%s" % results)
 
 
 class DeviceScrPlayerThread(threading.Thread):
@@ -241,7 +242,7 @@ class DeviceScrPlayerThread(threading.Thread):
             if not refreshDeviceScr:
                 break
             image = cmd.CmdExecutor.execute(cmd.Cmd("execInstEvent", ["snapshot"]))
-            if image.__class__ != MonkeyImage:
+            if not image or image.__class__ != MonkeyImage:
                 log.e(TAG, "Can't get snapshot. returned : %s" % image)
                 break
             inputStream = ByteArrayInputStream(image.convertToBytes())
@@ -317,14 +318,8 @@ class DeviceScrKeyListener(KeyListener):
     def keyPressed(self, event):
         keyInput = event.getKeyText(event.getKeyCode()).upper()
         if self.metaKeyState.has_key(keyInput):
-            self.metaKeyState[keyInput] = true
-        pass
-
-    def keyReleased(self, event):
-        keyInput = event.getKeyText(event.getKeyCode()).upper()
-        if self.metaKeyState.has_key(keyInput):
-            self.metaKeyState[keyInput] = False
-        if self.metaKeyState["SHIFT"]:
+            self.metaKeyState[keyInput] = True
+        elif self.metaKeyState["SHIFT"]:
             keyInput = "Shift-" + keyInput
         elif self.metaKeyState["ALT"]:
             keyInput = "Alt-" + keyInput
@@ -337,7 +332,7 @@ class DeviceScrKeyListener(KeyListener):
             if result:
                 notifyResult(result)
         except Exception, e:
-            log.e(TAG, "Failed to bind key.", e)
+            log.i(TAG, "Failed to bind key.", e)
             key = event.getKeyText(event.getKeyCode()).upper()
             if key == "BACKSPACE":
                 key = "DEL"
@@ -346,7 +341,13 @@ class DeviceScrKeyListener(KeyListener):
 
             command = cmd.Cmd("execInstEvent", ["press"], ["arg" + key, "actDOWN_AND_UP"])
             cmd.CmdExecutor.execute(command)
-        print "released " + keyInput
+        log.d(TAG, "released " + keyInput)
+
+
+    def keyReleased(self, event):
+        keyInput = event.getKeyText(event.getKeyCode()).upper()
+        if self.metaKeyState.has_key(keyInput):
+            self.metaKeyState[keyInput] = False
 
     def keyTyped(self, event):
         pass
