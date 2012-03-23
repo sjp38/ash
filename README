@@ -9,4 +9,8 @@ Anyone can use codes of Ash everywhere. But, should follow limitation of GPL v3.
 0. You should install Android SDK. Android SDK's tools directory should be exist in your PATH.
 1. $ ./ash.py {init_gui-galaxyNexus | init_gui_galaxyS2}
 
+
+# Version
+0.9.9.1
+
 Author : SeongJae Park <sj38.park@gmail.com>
