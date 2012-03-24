@@ -1,5 +1,12 @@
 # Moduel for data module test.
 
+# Path setting for Damn Windows.
+import sys
+import os
+srcFileDir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(srcFileDir)
+sys.path = [srcFileDir] + sys.path
+
 from data_model import *
 from data import *
 import data

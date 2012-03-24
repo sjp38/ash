@@ -1,3 +1,10 @@
+# Path setting for Damn Windows.
+import sys
+import os
+srcFileDir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(srcFileDir)
+sys.path = [srcFileDir] + sys.path
+
 from cmd import *
 
 def testExecution():

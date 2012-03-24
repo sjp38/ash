@@ -2,7 +2,12 @@
 # Main entry point of Ash. Run with CLI.
 # Author : SeongJae Pakr <sj38.park@gmail.com>
 
+# Path setting for Damn Windows.
 import sys
+import os
+srcFileDir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(srcFileDir)
+sys.path = [srcFileDir] + sys.path
 
 import log
 from cmd import CmdParser, CmdExecutor
