@@ -7,7 +7,7 @@ from xml.etree.ElementTree import Element, SubElement, ElementTree, fromstring, 
 from com.android.monkeyrunner import MonkeyImage
 
 from java.awt import BorderLayout, Dimension
-from java.awt.event import KeyListener
+from java.awt.event import KeyListener, WindowFocusListener
 from java.awt.image import BufferedImage
 from java.io import ByteArrayInputStream
 from javax.imageio import ImageIO
@@ -25,7 +25,12 @@ import log
 
 TAG = "Ash_gui"
 
-FRAME_TITLE = "Ash_gui"
+FRAME_TITLE = "Ash"
+
+# Timeout for screen auto refresh in sec.
+# If there is no focus while this time, Auto refresh stop.
+DEFAULT_REFRESH_TIMEOUT = 60
+lastFocusLostTime = -1
 
 DEFAULT_SCREEN_SHORTER_SIZE = 320.0
 scrZoomRatio = 1.0
@@ -63,6 +68,8 @@ def start(layoutFile):
     frame.windowClosing = lambda x: windowClosing()
     frame.pack()
     frame.setVisible(True)
+    focusListener = GuiWindowFocusListener()
+    frame.addWindowFocusListener(focusListener)
 
 def stop():
     startAutoRefresh(False)
@@ -223,7 +230,6 @@ def notifyResult(results):
     else:
         terminalResult.append("\n" + "%s" % results)
 
-
 class DeviceScrPlayerThread(threading.Thread):
     def __init__(self):
         self.stop = False
@@ -241,6 +247,11 @@ class DeviceScrPlayerThread(threading.Thread):
         devScrPanelWidth = devScrPanel.getSize().width
         scrCtrlPanelHeight = scrCtrlPanel.getSize().height
         while(1):
+            global lastFocusLostTime
+            if (lastFocusLostTime > 0
+                    and time.time() - lastFocusLostTime > DEFAULT_REFRESH_TIMEOUT):
+                time.sleep(1)
+                continue
             if not refreshDeviceScr:
                 break
             image = cmd.CmdExecutor.execute(cmd.Cmd("execInstEvent", ["snapshot"]))
@@ -271,7 +282,15 @@ class DeviceScrPlayerThread(threading.Thread):
                 frame.setMinimumSize(Dimension(minWidth, minHeight))
                 lastWidth = calWidth
 
+class GuiWindowFocusListener(WindowFocusListener):
+    def windowGainedFocus(self, event):
+        global lastFocusLostTime
+        if lastFocusLostTime > 0:
+            lastFocusLostTime = -1
 
+    def windowLostFocus(self, event):
+        global lastFocusLostTime
+        lastFocusLostTime = time.time()
 
 class DeviceScrMouseListener(MouseInputAdapter):
     def __init__(self):
