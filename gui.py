@@ -10,14 +10,15 @@ from java.awt import BorderLayout, Dimension
 from java.awt.event import KeyListener, WindowFocusListener
 from java.awt.image import BufferedImage
 from java.io import ByteArrayInputStream
+from java.lang import System
 from javax.imageio import ImageIO
 from javax.swing import JButton, JFrame, JLabel, JPanel, JTextArea, JScrollPane, ScrollPaneConstants, BoxLayout, JTextField
 from javax.swing.event import MouseInputAdapter
 from pawt import swing
 
+import sys
 import threading
 import time
-
 
 import manual
 import cmd
@@ -348,6 +349,11 @@ class DeviceScrKeyListener(KeyListener):
     metaKeyState = {"SHIFT":False, "ALT":False, "CTRL":False}
     def keyPressed(self, event):
         keyInput = event.getKeyText(event.getKeyCode()).upper()
+        if System.getProperty("os.name").startswith("Mac"):
+            keyInput = keyInput.encode("utf-8")
+            if "\xe2\x87\xa7" == keyInput: keyInput = "SHIFT"
+            elif "\xe2\x8c\xa5" == keyInput: keyInput = "ALT"
+            elif "\xe2\x8c\x83" == keyInput: keyInput = "CTRL"
         if self.metaKeyState.has_key(keyInput):
             self.metaKeyState[keyInput] = True
         elif self.metaKeyState["SHIFT"]:
@@ -377,6 +383,11 @@ class DeviceScrKeyListener(KeyListener):
 
     def keyReleased(self, event):
         keyInput = event.getKeyText(event.getKeyCode()).upper()
+        if System.getProperty("os.name").startswith("Mac"):
+            keyInput = keyInput.encode("utf-8")
+            if "\xe2\x87\xa7" == keyInput: keyInput = "SHIFT"
+            elif "\xe2\x8c\xa5" == keyInput: keyInput = "ALT"
+            elif "\xe2\x8c\x83" == keyInput: keyInput = "CTRL"
         if self.metaKeyState.has_key(keyInput):
             self.metaKeyState[keyInput] = False
 
