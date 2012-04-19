@@ -1,12 +1,13 @@
 from device_control import *
 import device_control
 
-# Path setting for Damn Windows.
-import sys
-import os
-srcFileDir = os.path.dirname(os.path.abspath(__file__))
-os.chdir(srcFileDir)
-sys.path = [srcFileDir] + sys.path
+from java.lang import System
+if System.getProperty("os.name").startswith("Windows"):
+    import os
+    import sys
+    srcFileDir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(srcFileDir)
+    sys.path = [srcFileDir] + sys.path
 
 # Test
 def testSnapshot():

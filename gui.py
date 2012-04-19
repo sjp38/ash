@@ -21,6 +21,7 @@ import threading
 import time
 
 import manual
+import data
 import cmd
 import log
 
@@ -146,6 +147,7 @@ def getContentPane():
 def windowClosing():
     global refreshDeviceScr
     refreshDeviceScr = False
+    sys.exit()
 
 def handleZoominBtn(event):
     global scrZoomRatio
@@ -160,29 +162,24 @@ def handleZoomoutBtn(event):
 def handleKeyButton(event):
     global deviceScreen
     if event.getActionCommand() == "WAKE":
-        command = cmd.Cmd("execInstEvent", ["wake"], [])
+        command = data.Command("wake", [])
     else:
-        command = cmd.Cmd("execInstEvent", ["press"],
-                ["arg%s" % event.getActionCommand(), "actDOWN_AND_UP"])
+        command = data.Command("press", ["DOWN_AND_UP", event.getActionCommand()])
     cmd.CmdExecutor.execute(command)
     deviceScreen.requestFocus()
 
 def handleTerminalInput(event):
     global terminalInput
     userInput = terminalInput.getText()
+    userInput = userInput.encode("utf-8")
     terminalInput.setText("")
     if not userInput:
         notifyResult(manual.CMDS)
         return
-    try:
-        parsed = cmd.CmdParser.parse(userInput)
-        result = cmd.CmdExecutor.execute(parsed)
-        if result:
-            notifyResult(result)
-    # Errors came with exception.
-    except Exception, e:
-        log.e(TAG, "Exception.", e)
-
+    parsed = cmd.CmdParser.parse(userInput)
+    result = cmd.CmdExecutor.execute(parsed)
+    if result:
+        notifyResult(result)
 
 def getControlPanel():
     global controlPanel
@@ -255,7 +252,7 @@ class DeviceScrPlayerThread(threading.Thread):
                 continue
             if not refreshDeviceScr:
                 break
-            image = cmd.CmdExecutor.execute(cmd.Cmd("execInstEvent", ["snapshot"]))
+            image = cmd.CmdExecutor.execute(data.Command("snapshot", []))
             if not image or image.__class__ != MonkeyImage:
                 log.e(TAG, "Can't get snapshot. returned : %s" % image)
                 break
@@ -306,24 +303,18 @@ class DeviceScrMouseListener(MouseInputAdapter):
         deviceScreen.requestFocus()
         self.time1 = time.time()
         self.xy1 = self.recalXY(event.getX(), event.getY())
-        command = cmd.Cmd("execInstEvent", ["touch"],
-                ["x1%s" % self.xy1[0], "y1%s" % self.xy1[1], "actDOWN"])
-        cmd.CmdExecutor.execute(command)
 
     def mouseReleased(self, event):
         if self.dragging:
             self.dragging = False
             xy2 = self.recalXY(event.getX(), event.getY())
             time2 = time.time()
-            command = cmd.Cmd("execInstEvent", ["drag"],
-                    ["x1%s" % self.xy1[0], "y1%s" % self.xy1[1],
-                        "x2%s" % xy2[0], "y2%s" % xy2[1],
-                        "dur%s" % (time2 - self.time1)])
+            command = data.Command("drag", [self.xy1[0], self.xy1[1],
+                xy2[0], xy2[1], time2 - self.time1])
             cmd.CmdExecutor.execute(command)
             return
         xy = self.recalXY(event.getX(), event.getY())
-        command = cmd.Cmd("execInstEvent", ["touch"],
-                ["x1%s" % xy[0], "y1%s" % xy[1], "actDOWN_AND_UP"])
+        command = data.Command("touch", ["DOWN_AND_UP", xy[0], xy[1]])
         cmd.CmdExecutor.execute(command)
 
     def mouseDragged(self, event):
@@ -341,30 +332,38 @@ class DeviceScrMouseListener(MouseInputAdapter):
             direction = "UP"
         else:
             direction = "DOWN"
-        command = cmd.Cmd("execInstEvent", ["press"],
-                ["argDPAD_%s" % direction, "actDOWN_AND_UP"])
+        command = data.Command("press", ["DOWN_AND_UP", "DPAD_%s" % direction])
         cmd.CmdExecutor.execute(command)
 
 class DeviceScrKeyListener(KeyListener):
     metaKeyState = {"SHIFT":False, "ALT":False, "CTRL":False}
-    def keyPressed(self, event):
+
+    def processKey(self, event, isDown):
         keyInput = event.getKeyText(event.getKeyCode()).upper()
         if System.getProperty("os.name").startswith("Mac"):
             keyInput = keyInput.encode("utf-8")
             if "\xe2\x87\xa7" == keyInput: keyInput = "SHIFT"
             elif "\xe2\x8c\xa5" == keyInput: keyInput = "ALT"
             elif "\xe2\x8c\x83" == keyInput: keyInput = "CTRL"
-        if self.metaKeyState.has_key(keyInput):
-            self.metaKeyState[keyInput] = True
-        elif self.metaKeyState["SHIFT"]:
-            keyInput = "Shift-" + keyInput
-        elif self.metaKeyState["ALT"]:
-            keyInput = "Alt-" + keyInput
-        elif self.metaKeyState["CTRL"]:
-            keyInput = "Ctrl-" + keyInput
+
+        if isDown:
+            if self.metaKeyState.has_key(keyInput):
+                self.metaKeyState[keyInput] = True
+            elif self.metaKeyState["SHIFT"]:
+                keyInput = "Shift-" + keyInput
+            elif self.metaKeyState["ALT"]:
+                keyInput = "Alt-" + keyInput
+            elif self.metaKeyState["CTRL"]:
+                keyInput = "Ctrl-" + keyInput
+            keyInput += "_DOWN"
+        else:
+            if self.metaKeyState.has_key(keyInput):
+                self.metaKeyState[keyInput] = False
+            keyInput += "_UP"
 
         try :
-            command = cmd.Cmd("execBindingWithKey", [keyInput])
+            command = data.Command("exec",
+                    [data.Trigger(data.currentTriggerMode, "keyboard", keyInput)])
             result = cmd.CmdExecutor.execute(command)
             if result:
                 notifyResult(result)
@@ -375,21 +374,20 @@ class DeviceScrKeyListener(KeyListener):
                 key = "DEL"
             elif key in ["UP", "DOWN", "LEFT", "RIGHT"]:
                 key = "DPAD_" + key
+            elif key in ["SHIFT", "ALT"]:
+                key = key + "_LEFT"
+            if isDown: action = "DOWN"
+            else: action = "UP"
 
-            command = cmd.Cmd("execInstEvent", ["press"], ["arg" + key, "actDOWN_AND_UP"])
+            command = data.Command("press", [action, key])
             cmd.CmdExecutor.execute(command)
-        log.d(TAG, "released " + keyInput)
+
+    def keyPressed(self, event):
+        self.processKey(event, True)
 
 
     def keyReleased(self, event):
-        keyInput = event.getKeyText(event.getKeyCode()).upper()
-        if System.getProperty("os.name").startswith("Mac"):
-            keyInput = keyInput.encode("utf-8")
-            if "\xe2\x87\xa7" == keyInput: keyInput = "SHIFT"
-            elif "\xe2\x8c\xa5" == keyInput: keyInput = "ALT"
-            elif "\xe2\x8c\x83" == keyInput: keyInput = "CTRL"
-        if self.metaKeyState.has_key(keyInput):
-            self.metaKeyState[keyInput] = False
+        self.processKey(event, False)
 
     def keyTyped(self, event):
         pass

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<refs>
+    <ref name="command">
+        <trigger mode="modeA" type="key" value="Shift-K_DOWN" />
+        <command cmd="type">
+            <arg>abcd</arg>
+        </command>
+    </ref>
+
+
+    <ref name="listWithSingleCommand">
+        <trigger mode="modeB" type="key" value="Shift-K_DOWN" />
+        <list>
+            <command cmd="touch">
+                <arg>DOWN</arg>
+                <arg>300</arg>
+                <arg>400</arg>
+            </command>
+        </list>
+    </ref>
+
+    <ref name="listWithCmdAndList">
+        <trigger mode="modeB" type="key" value="Ctrl-Shift-L_DOWN" />
+        <list>
+            <command cmd="shell(ls -al)" />
+            <list>
+                <command cmd="drag">
+                    <arg>100</arg>
+                    <arg>200</arg>
+                    <arg>150</arg>
+                    <arg>210</arg>
+                </command>
+            </list>
+        </list>
+    </ref>
+
+    <ref name="refForRef">
+        <trigger type="key" value="D_UP" />
+        <ref name="command" />
+    </ref>
+
+    <ref name="complicated">
+        <list>
+            <ref name="listWithCmdAndList" />
+            <command cmd="snapshot">
+                <arg>abc.png</arg>
+            </command>
+        </list>
+    </ref>
+</refs>

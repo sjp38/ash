@@ -1,364 +1,177 @@
 # Moduel for data module test.
 
-# Path setting for Damn Windows.
-import sys
-import os
-srcFileDir = os.path.dirname(os.path.abspath(__file__))
-os.chdir(srcFileDir)
-sys.path = [srcFileDir] + sys.path
-
-from data_model import *
 from data import *
-import data
 
-def testSaveBindingSet():
-    print "test saveBindingSet()"
-    bindings.clear()
-    bindingSets.clear()
+trigger_test = Trigger("modeA", "keyboard", "Ctrl-Shift-K")
+cmd_for_test = Command("press", ["DOWN", 100, 200]) 
+reference_for_test = Ref("referenceTestName", trigger_test, cmd_for_test)
 
-    loadBinding("test_xmls/keybinding_sample.xml")
-    loadBindingSet("test_xmls/bindingset_sample.xml")
+compare1 = Ref("command", Trigger("modeA", "key", "Shift-K_DOWN"), Command("type", ["abcd"]))
+compare2 = Ref("listWithSingleCommand", Trigger("modeB", "key", "Shift-K_DOWN"), [Command("touch", ["DOWN", 300, 400])])
+compare3 = Ref("listWithCmdAndList", Trigger("modeB", "key", "Ctrl-Shift-L_DOWN"), [Command("shell(ls -al)", []), [Command("drag", [100, 200, 150, 210])]])
+compare4 = Ref("refForRef", Trigger(DEFAULT_TRIGGER_MODE, "key", "D_UP"), Ref("command", None, None))
+compare5 = Ref("complicated", None, [Ref("listWithCmdAndList", None, None), Command("snapshot", ["abc.png"])])
 
-    temp = bindingSets.values()
+def testReference():
+    print "testReference!!"
+    print reference_for_test
+    print ""
 
-    saveBindingSet("test_xmls/saveBindingSetTest.xml")
-    bindings.clear()
-    bindingSets.clear()
+def testTrigger():
+    print "testTrigger!!!"
+    trigger = Trigger("modeA", "keyboard", "Ctrl-Shift-K")
+    print trigger
+    print ""
 
-    loadBinding("test_xmls/keybinding_sample.xml")
-    loadBindingSet("test_xmls/saveBindingSetTest.xml")
+def testLoad():
+    print "\ntestLoad!!!"
+    loadFrom("test_xmls/data_sample.xml")
 
-    for bindingSet in temp:
-        for binding in bindingSet.bindings.values():
-            if (bindingSets[bindingSet.name].bindings[binding.keyInput].__str__()
-                != binding.__str__()):
-                return False
-    return True
+    original = getRef(compare1.name)
+    print "compare\n ", compare1, "\nand\n", original, "\n"
+    if compare1.__str__() != original.__str__(): return True
 
-def testLoadBindingSet():
-    print "test loadBindingSet()"
-    bindings.clear()
-    bindingSets.clear()
+    original = getRef(compare2.name)
+    print "compare\n ", compare2, "\nand\n", original, "\n"
+    if compare2.__str__() != original.__str__(): return True
 
-    loadBinding("test_xmls/keybinding_sample.xml")
-    loadBindingSet("test_xmls/bindingset_sample.xml")
+    original = getRef(compare3.name)
+    print "compare\n", compare3, "\nand\n", original, "\n"
+    if compare3.__str__() != original.__str__(): return True
 
-    binding1 = Binding("simpleKey", "A", "evtouchSample")
-    binding2 = Binding("ControlCombination", "Ctrl-K", "evdragSample")
-    binding3 = Binding("AltCombination", "Alt-C", "esmultipleEvents")
-    binding4 = Binding("Home", "HOME", "essingleEventStream")
+    original = getRef(compare4.name)
+    print "compare\n  ", compare4, "\nand\n", original, "\n"
+    if compare4.__str__() != original.__str__(): return True
 
-    bindingSet1 = BindingSet("bindingSet1", {binding1.keyInput:binding1
-        , binding2.keyInput:binding2, binding4.keyInput:binding4})
-    if (not bindingSets.has_key(bindingSet1.name)
-         or bindingSets[bindingSet1.name].__str__() != bindingSet1.__str__()):
-        print "Fail 1"
-        return False
-    bindingSet2 = BindingSet("bindingSet2", {binding1.keyInput:binding1
-        , binding2.keyInput:binding2, binding3.keyInput:binding3
-        , binding4.keyInput:binding4})
-    print bindingSets[bindingSet2.name]
-    print bindingSet2
-    if (not bindingSets.has_key(bindingSet2.name)
-            or bindingSets[bindingSet2.name].__str__() != bindingSet2.__str__()):
-        print "Fail 2"
-        return False
-    return True
+    original = getRef(compare5.name)
+    print "compare\n ", compare5, "\nand\n", original, "\n"
+    if compare5.__str__() != original.__str__(): return True
 
-def testRemoveBinding():
-    print "tet remove binding"
-    bindings.clear()
-    bindingSets.clear()
-    test = Binding("test", "Ctrl-K", "evtest")
-    addBinding(test)
-    removeBinding(test.name)
+def testSave():
+    print "\ntestSave!!!\n"
+    references.clear()
+    triggers.clear()
+    addReference(compare1)
+    addReference(compare2)
+    addReference(compare3)
+    addReference(compare4)
+    addReference(compare5)
+    bak = references.values()
+    bak.sort()
+    bak_triggers = triggers.values()
+    bak_triggers.sort()
+    saveTo("test_xmls/data_save_test.xml")
+    references.clear()
+    triggers.clear()
 
-    if bindingSets[data.currentBindingSet].bindings.has_key(test.keyInput):
-        print "fail! "
-        return False
-    print "Success!"
-    return True
+    loadFrom("test_xmls/data_save_test.xml")
+    now = references.values()
+    now.sort()
+    now_triggers = triggers.values()
+    now_triggers.sort()
 
-def testAddBinding():
-    print "test add binding"
-    bindings.clear()
-    bindingSets.clear()
-    test = Binding("test", "Ctrl-K", "evtest")
-    addBinding(test)
+    print "now : ", now, "\n"
+    for i in range(len(bak)):
+        print "compare\n%s\nand\n%s\n" % (bak[i], now[i])
+        if bak[i].__str__() != now[i].__str__():
+            return True
+    for i in range(len(bak_triggers)):
+        print "compare\n%s\nand\n%s\n" % (bak_triggers[i], now_triggers[i])
+        if bak_triggers[i].__str__() != now_triggers[i].__str__():
+            return True
 
-    if bindings[test.name] != test:
-        print "false on 1st test"
-        return False
-    if bindingSets[data.currentBindingSet].bindings[test.keyInput] != test:
-        print "false on 1st test"
-        return False
-
-    print "success!"
-    return True
-
-
-def testSaveBinding():
-    print "test saveBinding"
-    bindings.clear()
-    loadBinding("test_xmls/keybinding_sample.xml")
-    saveBinding("test_xmls/saveBindingTest.xml")
-    temp = bindings
-    bindings.clear()
-    loadBinding("test_xmls/saveBindingTest.xml")
-    if temp != bindings:
-        return False
-    return True
-
-def testLoadBinding():
-    print "testLoadBinding"
-    bindings.clear()
-    loadBinding("test_xmls/keybinding_sample.xml")
-
-    test = Binding("simpleKey", "A", "evtouchSample")
-    loaded = bindings.get(test.name)
-    print test
-    print loaded
-    if test.__str__() != loaded.__str__():
-        print "1 fail."
-        return False
-
-    test = Binding("ControlCombination", "Ctrl-K", "evdragSample")
-    loaded = bindings.get(test.name)
-    if test.__str__() != loaded.__str__():
-        print "2 fail."
-        return False
-
-    test = Binding("AltCombination", "Alt-C", "esmultipleEvents")
-    loaded = bindings.get(test.name)
-    if test.__str__() != loaded.__str__():
-        print "3 fail."
-        return False
-
-    test = Binding("Home", "HOME", "essingleEventStream")
-    loaded = bindings.get(test.name)
-    if test.__str__() != loaded.__str__():
-        print "4 fail."
-        return False
-    return True
-
-
-def testSaveEventStream():
-    eventstreams.clear()
-
-    test = EventStream("singleEvent", [[0.0, "evtouchSample"]])
-    eventstreams[test.name] = test
-
-    test = EventStream("multipleEvents", [[0.0, "evkeyPressSample"], [0.5,
-        "evtouchSample"], [0.5, "evdragSample"]])
-    eventstreams[test.name] = test
-
-    test = EventStream("singleEventStream", [[0.0, "essingleEvent"]])
-    eventstreams[test.name] = test
-
-
-    test = EventStream("multipleEventStreams", [[0.0,"essingleEvent"], [0.5,
-        "esmultipleEvents"], [0.5, "essingleEventStream"]])
-    eventstreams[test.name] = test
-
-    test = EventStream("mixedEventStreams", [[0.0,"evkeyPressSample"], [0.5,
-        "esmultipleEvents"]])
-    eventstreams[test.name] = test
-    saveEventStream("test_xmls/saveEventStreamTest.xml")
-
-    temp = eventstreams
-    loadEventStream("test_xmls/saveEventStreamTest.xml")
-
-    if temp != eventstreams: return False
-    return True
-
-
-
-def testLoadEventStream():
-    eventstreams.clear()
-    loadEventStream("test_xmls/eventstream_sample.xml")
-    test = EventStream("singleEvent", [[0.0, "evtouchSample"]])
-    if eventstreams.get(test.name).__str__() != test.__str__():
-        print "1 ", test, eventstreams.get(test.name)
-        return False
-
-    test = EventStream("multipleEvents", [[0.0, "evkeyPressSample"], [0.5,
-        "evtouchSample"], [0.5, "evdragSample"]])
-    loaded = eventstreams.get(test.name)
-    if loaded.__str__() != test.__str__():
-        print "2 ", test, loaded
-        return False 
-
-    test = EventStream("singleEventStream", [[0.0, "essingleEvent"]])
-    if eventstreams.get(test.name).__str__() != test.__str__():
-        print "3 ", test, eventstreams.get(test.name)
-        return False
-
-
-    test = EventStream("multipleEventStreams", [[0.0,"essingleEvent"], [0.5,
-        "esmultipleEvents"], [0.5, "essingleEventStream"]])
-    if eventstreams.get(test.name).__str__() != test.__str__():
-        print "4 ", test, eventstreams.get(test.name)
-        return False
-
-
-    test = EventStream("mixedEventStreams", [[0.0,"evkeyPressSample"], [0.5,
-        "esmultipleEvents"]])
-    if eventstreams.get(test.name).__str__() != test.__str__():
-        print "5 ", test, eventstreams.get(test.name)
-        return False
-    return True
-
-
-def testSaveEvent():
-    print "testSaveEvent"
-    if not testLoadEvent():
-        print "Fail to testLoadEvent(). Test can't be done."
-        return False
-
-    events.clear()
-    test = Event("touchSample", "touch", [30,50], 0.0, "DOWN_AND_UP")
-    events[test.name] = test
-    test = Event("keyPressSample", "press", [], 0.0, "DOWN", "A")
-    events[test.name] = test
-    test = Event("dragSample", "drag", [30,50,200,50], 0.3, "")
-    events[test.name] = test
-    test = Event("typeSample", "type", [], 0.0, "", "abcd")
-    events[test.name] = test
-    test = Event("wakeSample", "wake", [], 0.0, "")
-    events[test.name] = test
-    test = Event("rebootSample", "reboot", [], 0.0, "")
-    events[test.name] = test
-    test = Event("getPropertySample", "getProp", [],0.0,"", "display.width")
-    events[test.name] = test
-    test = Event("shellSample", "shell", [], 0.0, "", "ls")
-    events[test.name] = test
-    test = Event("snapshotSample", "snapshot", [], 0.0, "", "~/snapshot.png")
-
-    saveEvent("test_xmls/saveEventTest.xml")
-
-    tmp = events
-    loadEvent("test_xmls/saveEventTest.xml")
-    if tmp != events: return False
-    return True
-
-
-def testLoadEvent():
-    print "testLoadEvent"
-    loadEvent("test_xmls/event_sample.xml")
-    test = Event("touchSample", "touch", [30,50], 0.0, "DOWN_AND_UP")
-    loaded = events.get("touchSample")
-    if test.__str__() != loaded.__str__():
-        print loaded, test
-        print "1"
-        return False
-
-    test = Event("keyPressSample", "press", [], 0.0, "DOWN", "A")
-    loaded = events.get("keyPressSample")
-    if test.__str__() != loaded.__str__():
-        print loaded, test
-        print "2"
-        return False
-
-    test = Event("dragSample", "drag", [30,50,200,50], 0.3, "")
-    loaded = events.get("dragSample")
-    if test.__str__() != loaded.__str__():
-        print loaded, test
-        print "3"
-        return False
-
-    test = Event("typeSample", "type", [], 0.0, "", "abcd")
-    loaded = events.get("typeSample")
-    if test.__str__() != loaded.__str__():
-        print loaded, test
-        print "4"
-        return False
-
-    test = Event("wakeSample", "wake", [], 0.0, "")
-    loaded = events.get("wakeSample")
-    if test.__str__() != loaded.__str__():
-        print loaded, test
-        print "5"
-        return False
-
-    test = Event("shellSample", "shell", [], 0.0, "", "ls")
-    loaded = events.get("shellSample")
-    if test.__str__() != loaded.__str__():
-        print loaded, test
-        print "6"
-        return False
-
-    return True
-
-
-def testAddEvent():
-    print "testAddEvent"
-    test = Event("test", "touch", [30, 50], 0, "DOWN_AND_UP")
-    addEvent(test)
-    added = events.get("test")
-    if test.__str__() != added.__str__():
-        print "Fail!"
-        print ""
-        return False
-    else:
-        print "Success!"
-        print ""
+def testAddReference():
+    print "testAddReference!!!"
+    references.clear()
+    triggers.clear()
+    trigger = Trigger("triggerTestMode", "type", "value")
+    ref = Ref("test", trigger, Command("shell(ls -al)", []))
+    addReference(ref)
+    if not addReference(ref):
+        print "No warning although add same reference twice!"
+        return True
+    ref2 = Ref("test2", trigger, Command("touch", ["DOWN", "100", "100"]))
+    if not addReference(ref2):
+        print "No warning although add same trigger twice!"
         return True
 
-def testEvent():
-    print "test event"
-    print Event("test", "touch", [30, 50], 0, "DOWN_AND_UP")
-    print ""
-    return True
+    searched = triggers[trigger.mode][trigger.key].trigger
+    if searched.__str__() != trigger.__str__():
+        print "trigger not registered!"
+        print "compared\n%s\n%s\n" % (searched, trigger)
+        return True
+    return False
 
-def testEventStream():
-    print "test event stream"
-    print EventStream("eventstream", [0.0,"event1", 0.3, "event2", 0.8, "event3"])
-    print ""
-    return True
+def testRemoveReference():
+    print "testRemoveReference!!!"
+    references.clear()
+    triggers.clear()
 
-def testBinding():
-    print "test binding"
-    print Binding("binding", "Ctrl-K", "test")
-    print ""
-    return True
+    if not removeReference("test"):
+        print "No warning although removed not registered reference!"
+        return True
 
-def testBindingSet():
-    print "test bindingset"
-    print BindingSet("bindingsetTest",
-            {"Ctrl-N":Binding("test","Ctrl-N","evtest")})
-    print ""
-    return True
+    addReference(reference_for_test)
+    removeReference(reference_for_test.name)
+    if len(references) > 0:
+        print "reference not removed!!!"
+        return True
 
+def testSetTrigger():
+    print "testSetTrigger!!!"
+    references.clear()
+    triggers.clear()
+
+    if not setTrigger(reference_for_test, trigger_test):
+        print "No warning although set trigger to unexist reference!"
+        return True
+    addReference(reference_for_test)
+    trigger2 = Trigger("modeB", "typeTest", "valueTest")
+    setTrigger(reference_for_test, trigger2)
+    if len(triggers[reference_for_test.trigger.mode]) > 0:
+        print "Old trigger not deleted!"
+        return True
+    nowTrigger = triggers["modeB"][trigger2.key].trigger
+    if nowTrigger.__str__() != trigger2.__str__():
+        print "Trigger not set correctly!"
+        print "compared\n%s\n%s" % (nowTrigger, trigger2)
+        return True
+
+    reference_for_test.name = "abcd"
+    if triggers[trigger2.mode][trigger2.key].name == reference_for_test.name:
+        print "No copy protection for reference!"
+        return True
+
+    trigger2.trig_type = "copyTest"
+    if triggers[trigger2.mode][trigger2.key].trigger.trig_type == trigger2.trig_type:
+        print "No copy protection for trigger!"
+        return True
+
+def testGetRef():
+    references.clear()
+    triggers.clear()
+
+    addReference(reference_for_test)
+    get = getRef(reference_for_test.name)
+    get.name = "testGetRef"
+    get2 = getRef(reference_for_test.name)
+    if get.name == get2.name:
+        print "No copy protection for reference!"
+        return True
+
+
+def testModule():
+    if testTrigger(): return True
+    if testReference(): return True
+    if testLoad(): return True
+    if testSave(): return True
+    if testAddReference(): return True
+    if testRemoveReference(): return True
+    if testSetTrigger(): return True
+    if testGetRef(): return True
 
 if __name__ == "__main__":
-    success = True
-    success = success and testEvent()
-    success = success and testEventStream()
-    success = success and testBinding()
-    success = success and testBindingSet()
-    success = success and testAddEvent()
-    success = success and testLoadEvent()
-    print ""
-    success = success and testSaveEvent()
-    print ""
-    success = success and testLoadEventStream()
-    print ""
-    success = success and testSaveEventStream()
-    print ""
-    success = success and testLoadBinding()
-    print ""
-    success = success and testSaveBinding()
-    print ""
-    success = success and testAddBinding()
-    print ""
-    success = success and testRemoveBinding()
-    print ""
-    success = success and testLoadBindingSet()
-    print ""
-    success = success and testSaveBindingSet()
-    print ""
-
-
-#    success = success and testAddEvent()
-
-    print "Result : ", success
+    if testModule():
+        print "Data test FAIL!!!"
+    else:
+        print "Data test success!!!"

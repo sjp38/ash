@@ -1,0 +1,234 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<refs>
+    <ref name="A_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="A_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>50</arg>
+            <arg>520</arg>
+        </command>
+    </ref>
+    <ref name="B_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="B_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>300</arg>
+            <arg>600</arg>
+        </command>
+    </ref>
+    <ref name="C_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="C_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>200</arg>
+            <arg>600</arg>
+        </command>
+    </ref>
+    <ref name="D_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="D_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>150</arg>
+            <arg>520</arg>
+        </command>
+    </ref>
+    <ref name="E_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="E_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>120</arg>
+            <arg>450</arg>
+        </command>
+    </ref>
+    <ref name="F_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="F_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>200</arg>
+            <arg>520</arg>
+        </command>
+    </ref>
+    <ref name="G_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="G_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>250</arg>
+            <arg>520</arg>
+        </command>
+    </ref>
+    <ref name="H_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="H_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>300</arg>
+            <arg>520</arg>
+        </command>
+    </ref>
+    <ref name="I_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="I_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>370</arg>
+            <arg>450</arg>
+        </command>
+    </ref>
+    <ref name="J_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="J_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>350</arg>
+            <arg>520</arg>
+        </command>
+    </ref>
+    <ref name="K_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="K_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>400</arg>
+            <arg>520</arg>
+        </command>
+    </ref>
+    <ref name="L_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="L_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>450</arg>
+            <arg>520</arg>
+        </command>
+    </ref>
+    <ref name="M_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="M_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>400</arg>
+            <arg>600</arg>
+        </command>
+    </ref>
+    <ref name="N_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="N_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>350</arg>
+            <arg>600</arg>
+        </command>
+    </ref>
+    <ref name="O_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="O_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>420</arg>
+            <arg>450</arg>
+        </command>
+    </ref>
+    <ref name="P_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="P_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>470</arg>
+            <arg>450</arg>
+        </command>
+    </ref>
+    <ref name="Q_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="Q_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>25</arg>
+            <arg>450</arg>
+        </command>
+    </ref>
+    <ref name="R_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="R_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>170</arg>
+            <arg>450</arg>
+        </command>
+    </ref>
+    <ref name="S_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="S_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>100</arg>
+            <arg>520</arg>
+        </command>
+    </ref>
+    <ref name="T_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="T_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>220</arg>
+            <arg>450</arg>
+        </command>
+    </ref>
+    <ref name="U_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="U_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>320</arg>
+            <arg>450</arg>
+        </command>
+    </ref>
+    <ref name="Upper_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="Upper_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>35</arg>
+            <arg>600</arg>
+        </command>
+    </ref>
+    <ref name="V_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="V_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>250</arg>
+            <arg>600</arg>
+        </command>
+    </ref>
+    <ref name="W_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="W_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>70</arg>
+            <arg>450</arg>
+        </command>
+    </ref>
+    <ref name="X_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="X_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>150</arg>
+            <arg>600</arg>
+        </command>
+    </ref>
+    <ref name="Y_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="Y_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>270</arg>
+            <arg>450</arg>
+        </command>
+    </ref>
+    <ref name="Z_DOWN">
+        <trigger mode="googleKeyboard" type="keyboard" value="Z_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>100</arg>
+            <arg>600</arg>
+        </command>
+    </ref>
+
+    <ref name="switchToGoogle">
+        <trigger mode="default" type="keyboard" value="Ctrl-S_DOWN" />
+        <command cmd="switchTriggerMode">
+            <arg>googleKeyboard</arg>
+        </command>
+    </ref>
+
+    <ref name="switchToDefault">
+        <trigger mode="googleKeyboard" type="keyboard" value="Ctrl-S_DOWN" />
+        <command cmd="switchTriggerMode">
+            <arg>default</arg>
+        </command>
+    </ref>
+
+</refs>

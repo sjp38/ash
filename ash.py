@@ -3,10 +3,12 @@
 # Author : SeongJae Pakr <sj38.park@gmail.com>
 
 from java.lang import System
+
+import sys
+
 if System.getProperty("os.name").startswith("Windows"):
     import os
     srcFileDir = os.path.dirname(os.path.abspath(__file__))
-    print srcFileDir
     os.chdir(srcFileDir)
     sys.path = [srcFileDir] + sys.path
 
@@ -15,7 +17,6 @@ from cmd import CmdParser, CmdExecutor
 import manual
 
 TAG = "Ash"
-EXIT = "exit"
 
 def printResult(result):
     if result.__class__ == list:
@@ -45,7 +46,4 @@ if __name__ == "__main__":
         if (userInput == ""):
             print manual.CMDS
             continue
-        if (userInput == EXIT):
-            break
-
         parseAndExecute(userInput)

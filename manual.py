@@ -13,46 +13,50 @@ stopGui
 
 sleep <time in seconds>
 
-loadEevent <event file name>
-saveEvent <event file name>
-addEvent <name> <event type> [-arg<arg>] [-x1<x>] [-y1<y>] [-x2<x2>] [-y2<y2>] [-act{UP|DOWN|DOWN_AND_UP}] [-dur<duration>]
-removeEvent <name>
-showEvent <name>
-listEvent [-a]
-execEvent <name>
-execInstEvent <event type> [-arg<arg>] [-x1<x>] [-y1<y>] [-x2<x2>] [-y2<y2>] [-act{UP|DOWN|DOWN_AND_UP}] [-dur<duration>]
-
-loadEventstream <eventstream file name>
-saveEventstream <eventstream file name> [name]
-addEventstream <name> <{ev|es}event or stream name> [interval1] [{ev|es}event or stream2 name2] [interval2] ...
-removeEventstream <name>
-showEventstream <name>
-listEventstream [-a]
-execEventstream <name>
-recordEventstream <name>
-doneEventstreamRecording
-
-loadBinding <binding file name>
-saveBinding <binding file name>
-addBinding <name> <Keystream. e.g. Ctrl-K> <{ev|es|cmd"}event or event stream name or command[" if start with cmd]>
-# Meta key is only Ctrl-Alt-Shift. Order is as typed above.
-removeBinding <name>
-showBinding <name>
-listBinding [-a]
-execBinding <name>
-execBindingWithKey <keyInput e.g. Ctrl-K>
-
-loadBindingset <file name>
-saveBindingset <file name>
-newBindingset <name>
-removeBindingset <name>
-showBindingset <name>
-listBindingset [-a]
-currentBindingset
-switchBindingset <name>
-
-execScript <scriptName>
-
 exit
-"""
+help [command]
 
+touch <DOWN | UP | DOWN_AND_UP> <x> <y>
+press <DOWN | UP | DOWN_AND_UP> <key code>
+drag <x1> <y1> <x2> <y2> [duration]
+type <text>
+wake
+reboot
+getProp <property name>
+shell <"("shell command")">
+snapshot [file name]
+
+execScript <file path>
+exec <cmd|list|reference|trigger>
+load <file path>
+save <file path> # Unreferenced datas not saved.
+remove <reference name>
+show <reference name>
+listData <"reference" | "trigger_mode"> [-a] [-trigger_mode=<mode>]
+currentTriggerMode
+switchTriggerMode <mode name>
+record <name> # return reference with no trigger
+finishRecording
+setTrigger <reference name> <trigger>
+register <reference>
+
+cmd(string)
+list(cmds / references / lists seperated by ' ')
+reference(name [{trigger|-notrigger}] [{cmd|list|reference}])
+trigger([-mode<mode>] <type> <value>)
+
+# data type = cmd, list, reference.
+# list get cmds /references / lists.
+# cmd is just one line string.
+# reference is reference for cmd / list / reference with name, trigger(has mode, type, key).
+
+ex)
+reference(event1 modeA keyboard Shift-K_DOWN cmd(press UP 100 200))
+reference(event2 modeA keyboard Shift-K_UP list(cmd(press UP 100 200), reference(event1), list(cmd(press UP 100 200), reference(event1)))
+exec event1
+exec reference(cmd(press UP MENU))
+exec cmd(touch DOWN_AND_UP 300 400) # Maybe no one do this.
+exec list(reference(event1), reference(event2), list(cmd(touch UP 200 300)))
+switchmode modeA
+
+"""
