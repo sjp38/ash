@@ -303,6 +303,8 @@ class DeviceScrMouseListener(MouseInputAdapter):
         deviceScreen.requestFocus()
         self.time1 = time.time()
         self.xy1 = self.recalXY(event.getX(), event.getY())
+        command = data.Command("touch", ["DOWN", self.xy1[0], self.xy1[1]])
+        cmd.CmdExecutor.execute(command)
 
     def mouseReleased(self, event):
         if self.dragging:
@@ -314,7 +316,7 @@ class DeviceScrMouseListener(MouseInputAdapter):
             cmd.CmdExecutor.execute(command)
             return
         xy = self.recalXY(event.getX(), event.getY())
-        command = data.Command("touch", ["DOWN_AND_UP", xy[0], xy[1]])
+        command = data.Command("touch", ["UP", xy[0], xy[1]])
         cmd.CmdExecutor.execute(command)
 
     def mouseDragged(self, event):
@@ -368,7 +370,7 @@ class DeviceScrKeyListener(KeyListener):
             if result:
                 notifyResult(result)
         except Exception, e:
-            log.i(TAG, "Failed to bind key.", e)
+            log.i(TAG, "No trigger for this event.")
             key = event.getKeyText(event.getKeyCode()).upper()
             if key == "BACKSPACE":
                 key = "DEL"
