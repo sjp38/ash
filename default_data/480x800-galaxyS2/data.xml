@@ -5,7 +5,7 @@
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>50</arg>
-            <arg>520</arg>
+            <arg>600</arg>
         </command>
     </ref>
     <ref name="B_DOWN">
@@ -13,7 +13,7 @@
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>300</arg>
-            <arg>600</arg>
+            <arg>680</arg>
         </command>
     </ref>
     <ref name="C_DOWN">
@@ -21,7 +21,7 @@
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>200</arg>
-            <arg>600</arg>
+            <arg>680</arg>
         </command>
     </ref>
     <ref name="D_DOWN">
@@ -29,15 +29,15 @@
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>150</arg>
-            <arg>520</arg>
+            <arg>600</arg>
         </command>
     </ref>
     <ref name="E_DOWN">
         <trigger mode="googleKeyboard" type="keyboard" value="E_DOWN" />
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
-            <arg>120</arg>
-            <arg>450</arg>
+            <arg>125</arg>
+            <arg>520</arg>
         </command>
     </ref>
     <ref name="F_DOWN">
@@ -45,7 +45,7 @@
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>200</arg>
-            <arg>520</arg>
+            <arg>600</arg>
         </command>
     </ref>
     <ref name="G_DOWN">
@@ -53,7 +53,7 @@
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>250</arg>
-            <arg>520</arg>
+            <arg>600</arg>
         </command>
     </ref>
     <ref name="H_DOWN">
@@ -61,15 +61,15 @@
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>300</arg>
-            <arg>520</arg>
+            <arg>600</arg>
         </command>
     </ref>
     <ref name="I_DOWN">
         <trigger mode="googleKeyboard" type="keyboard" value="I_DOWN" />
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
-            <arg>370</arg>
-            <arg>450</arg>
+            <arg>375</arg>
+            <arg>520</arg>
         </command>
     </ref>
     <ref name="J_DOWN">
@@ -77,7 +77,7 @@
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>350</arg>
-            <arg>520</arg>
+            <arg>600</arg>
         </command>
     </ref>
     <ref name="K_DOWN">
@@ -85,7 +85,7 @@
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>400</arg>
-            <arg>520</arg>
+            <arg>600</arg>
         </command>
     </ref>
     <ref name="L_DOWN">
@@ -93,7 +93,7 @@
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>450</arg>
-            <arg>520</arg>
+            <arg>600</arg>
         </command>
     </ref>
     <ref name="M_DOWN">
@@ -101,7 +101,7 @@
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>400</arg>
-            <arg>600</arg>
+            <arg>680</arg>
         </command>
     </ref>
     <ref name="N_DOWN">
@@ -109,23 +109,23 @@
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>350</arg>
-            <arg>600</arg>
+            <arg>680</arg>
         </command>
     </ref>
     <ref name="O_DOWN">
         <trigger mode="googleKeyboard" type="keyboard" value="O_DOWN" />
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
-            <arg>420</arg>
-            <arg>450</arg>
+            <arg>425</arg>
+            <arg>520</arg>
         </command>
     </ref>
     <ref name="P_DOWN">
         <trigger mode="googleKeyboard" type="keyboard" value="P_DOWN" />
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
-            <arg>470</arg>
-            <arg>450</arg>
+            <arg>475</arg>
+            <arg>520</arg>
         </command>
     </ref>
     <ref name="Q_DOWN">
@@ -133,15 +133,15 @@
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>25</arg>
-            <arg>450</arg>
+            <arg>520</arg>
         </command>
     </ref>
     <ref name="R_DOWN">
         <trigger mode="googleKeyboard" type="keyboard" value="R_DOWN" />
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
-            <arg>170</arg>
-            <arg>450</arg>
+            <arg>175</arg>
+            <arg>520</arg>
         </command>
     </ref>
     <ref name="S_DOWN">
@@ -149,31 +149,23 @@
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>100</arg>
-            <arg>520</arg>
+            <arg>600</arg>
         </command>
     </ref>
     <ref name="T_DOWN">
         <trigger mode="googleKeyboard" type="keyboard" value="T_DOWN" />
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
-            <arg>220</arg>
-            <arg>450</arg>
+            <arg>225</arg>
+            <arg>520</arg>
         </command>
     </ref>
     <ref name="U_DOWN">
         <trigger mode="googleKeyboard" type="keyboard" value="U_DOWN" />
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
-            <arg>320</arg>
-            <arg>450</arg>
-        </command>
-    </ref>
-    <ref name="Upper_DOWN">
-        <trigger mode="googleKeyboard" type="keyboard" value="Upper_DOWN" />
-        <command cmd="touch">
-            <arg>DOWN_AND_UP</arg>
-            <arg>35</arg>
-            <arg>600</arg>
+            <arg>325</arg>
+            <arg>520</arg>
         </command>
     </ref>
     <ref name="V_DOWN">
@@ -181,15 +173,15 @@
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>250</arg>
-            <arg>600</arg>
+            <arg>680</arg>
         </command>
     </ref>
     <ref name="W_DOWN">
         <trigger mode="googleKeyboard" type="keyboard" value="W_DOWN" />
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
-            <arg>70</arg>
-            <arg>450</arg>
+            <arg>75</arg>
+            <arg>520</arg>
         </command>
     </ref>
     <ref name="X_DOWN">
@@ -197,15 +189,15 @@
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>150</arg>
-            <arg>600</arg>
+            <arg>680</arg>
         </command>
     </ref>
     <ref name="Y_DOWN">
         <trigger mode="googleKeyboard" type="keyboard" value="Y_DOWN" />
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
-            <arg>270</arg>
-            <arg>450</arg>
+            <arg>275</arg>
+            <arg>520</arg>
         </command>
     </ref>
     <ref name="Z_DOWN">
@@ -213,7 +205,7 @@
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>100</arg>
-            <arg>600</arg>
+            <arg>680</arg>
         </command>
     </ref>
 
