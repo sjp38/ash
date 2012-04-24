@@ -216,6 +216,22 @@
             <arg>1012</arg>
         </command>
     </ref>
+    <ref name="ToggleUpper">
+        <trigger mode="googleKeyboard" type="keyboard" value="SHIFT_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>50</arg>
+            <arg>1012</arg>
+        </command>
+    </ref>
+    <ref name="ToggleLanguage">
+        <trigger mode="googleKeyboard" type="keyboard" value="Shift-SPACE_DOWN" />
+        <command cmd="touch">
+            <arg>DOWN_AND_UP</arg>
+            <arg>60</arg>
+            <arg>1110</arg>
+        </command>
+    </ref>
 
     <ref name="switchToGoogle">
         <trigger mode="default" type="keyboard" value="Ctrl-S_DOWN" />
