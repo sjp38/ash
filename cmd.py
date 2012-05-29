@@ -8,6 +8,7 @@ import data
 from data import Ref, Command, Trigger
 import device_control
 import gui
+import directControl
 
 TAG = "Ash_Command"
 
@@ -44,15 +45,10 @@ class CmdParser:
                     args.append(split)
         return Command(cmd, args, options)
 
-
-def listDevices():
-    devices = device_control.getConnectedDevices()
-    return devices
-
 def connectDevice(args):
     if len(args) > 0:
         return device_control.connect(args[0])
-    devices = device_control.getConnectedDevices()
+    devices = device_control.listDevices()
     if len(devices) <= 0:
         return "No connected device."
     return device_control.connect(devices[0])
@@ -140,21 +136,42 @@ def makeTrigger(args, opts):
 
 class CmdExecutor:
     CMD_MAPS = {
-            "listDevices": lambda args, opts: device_control.getConnectedDevices(),
+            "listDevices": lambda args, opts: device_control.listDevices(opts),
             "connectDevice": lambda args, opts: connectDevice(args),
             "startGui": lambda args, opts: gui.start(args[0]),
             "startGuiAutoRefresh": lambda args, opts: gui.startAutoRefresh(True),
             "stopGuiAutoRefresh": lambda args, opts: gui.startAutoRefresh(False),
             "stopGui": lambda args, opts: gui.stop(),
 
+            "startDirectControl": lambda args, opts: directControl.start(),
+            "stopDirectControl":lambda args, opts: directControl.stop(),
+
+            "startAutoConnection":
+                lambda args, opts: device_control.startAutoConnection(),
+            "stopAutoConnection": lambda args, opts: device_control.stopAutoConnection(),
+            "focus": lambda args, opts: device_control.focus(args),
+            "focusTo": lambda args, opts: device_control.focusTo(args),
+
+            # show, hide cursor is for internal. doesn't show at manual.
+            # showCursor <x> <y> [-pressed]
+            "showCursor": lambda args, opts:
+                    device_control.showCursor(int(args[0]), int(args[1]), "pressed" in opts),
+            "hideCursor": lambda args, opts: device_control.hideCursor(),
+
             "sleep": lambda args, opts: time.sleep(float(args[0])),
 
             "exit": lambda args, opts: sys.exit(),
 #            "help": lambda args, opts: manual.help(args[0]),
 
-            "touch": lambda args, opts: device_control.touch(int(args[1]), int(args[2]), args[0]),
+            "setVirtualScreen": lambda args, opts:
+                    device_control.setVirtualScreen(int(args[0]), int(args[1])),
+            "touch": lambda args, opts:
+                    device_control.touch(int(args[1]), int(args[2]), args[0],
+                        "v" in opts),
             "press": lambda args, opts: device_control.keyPress(args[1], args[0]),
-            "drag": lambda args, opts: device_control.drag([args[0], args[1], args[2], args[3]], args[4]),
+            "drag": lambda args, opts:
+                    device_control.drag([args[0], args[1], args[2], args[3]], args[4],
+                        "v" in opts),
             "type": lambda args, opts: device_control.type(args[0]),
             "wake": lambda args, opts: device_control.wake(),
             "reboot": lambda args, opts: device_control.reboot(),

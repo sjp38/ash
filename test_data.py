@@ -1,3 +1,4 @@
+#!/usr/bin/env monkeyrunner
 # Moduel for data module test.
 
 from data import *

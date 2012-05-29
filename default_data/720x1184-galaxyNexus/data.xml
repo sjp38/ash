@@ -217,7 +217,7 @@
         </command>
     </ref>
     <ref name="ToggleUpper">
-        <trigger mode="googleKeyboard" type="keyboard" value="SHIFT_DOWN" />
+        <trigger mode="googleKeyboard" type="keyboard" value="CTRL_DOWN" />
         <command cmd="touch">
             <arg>DOWN_AND_UP</arg>
             <arg>50</arg>

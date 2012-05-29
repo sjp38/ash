@@ -341,6 +341,7 @@ class DeviceScrKeyListener(KeyListener):
     metaKeyState = {"SHIFT":False, "ALT":False, "CTRL":False}
 
     def processKey(self, event, isDown):
+        print isDown
         keyInput = event.getKeyText(event.getKeyCode()).upper()
         if System.getProperty("os.name").startswith("Mac"):
             keyInput = keyInput.encode("utf-8")

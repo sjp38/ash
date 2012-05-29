@@ -1,3 +1,5 @@
+#!/usr/bin/env monkeyrunner
+
 from java.lang import System
 if System.getProperty("os.name").startswith("Windows"):
     import os
@@ -58,7 +60,12 @@ def testExecution():
             "startGui test_xmls/gui_keylayout_sample.xml",
             "startGuiAutoRefresh",
             "stopGuiAutoRefresh",
-            "stopGui"
+            "stopGui",
+            "startDirectControl",
+            "stopDirectControl",
+            "startAutoConnection",
+            "stopAutoConnection",
+            "focus 0"
             ]
 
     try:

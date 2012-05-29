@@ -1,0 +1,3 @@
+load default_data/720x1184-galaxyNexus/data.xml
+switchTriggerMode googleKeyboard
+startDirectControl

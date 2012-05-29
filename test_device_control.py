@@ -1,3 +1,4 @@
+#!/usr/bin/env monkeyrunner
 from device_control import *
 import device_control
 
@@ -69,7 +70,7 @@ def testType():
         type("abcd")
     except:
         print "exception"
-#        raise
+        raise
         return True
     return False
 
@@ -82,12 +83,35 @@ def testDrag():
 #        raise
         return True
 
+    try:
+        drag((100,100,400,400), 1.0, True)
+    except:
+        print "case 2!"
+#        raise
+        return True
+
 def testKeyPress():
     print "test keyPress"
     try:
         keyPress("A", "DOWN_AND_UP")
     except:
 #        raise
+        return True
+
+def testSetVirtualScreen():
+    print "test setVirtualScreen"
+    try:
+        setVirtualScreen(800, 480)
+    except:
+        print "case 1"
+        raise
+        return True
+
+    try:
+        setVirtualScreen(-1, -1)
+    except:
+        print "case 2"
+        #raise
         return True
 
 def testTouch():
@@ -113,11 +137,19 @@ def testTouch():
     except:
         pass
 
-# Success if execute with no exception.
-def testGetConnectedDevices():
-    print "test getConnectedDevices"
     try:
-        getConnectedDevices()
+        touch(100, 200, "UP", True)
+    except:
+        print "case 4"
+        return True
+
+# Success if execute with no exception.
+def testListDevices():
+    print "test listDevices"
+    try:
+        print listDevices([])
+        print listDevices(["ash"])
+        print listDevices(["ash", "serial"])
     except:
         return True
     return False
@@ -128,12 +160,67 @@ def testConnect():
     try :
         connect("test")
     except:
+        raise
+        return True
+    return False
+
+def testStartAutoConnection():
+    print "test startAutoConnection"
+    try :
+        startAutoConnection()
+        time.sleep(5)
+    except:
+        raise
+        return True
+    return False
+
+def testStopAutoConnection():
+    print "test stopAutoConnection"
+    try :
+        stopAutoConnection()
+    except:
+        return True
+    return False
+
+def testShowCursor():
+    print "test showCursor"
+    try :
+        showCursor(10, 20, True)
+    except:
+        return True
+    return False
+
+def testHideCursor():
+    print "test hideCursor"
+    try :
+        hideCursor()
+    except:
         return True
     return False
 
 
 def testModule():
-    result = testGetConnectedDevices()
+    result = testStartAutoConnection()
+    if result:
+        print "Fail! ", result
+        return
+
+    result = testStopAutoConnection()
+    if result:
+        print "Fail! ", result
+        return
+
+    result = testShowCursor()
+    if result:
+        print "Fail! ", result
+        return
+
+    result = testHideCursor()
+    if result:
+        print "Fail! ", result
+        return
+
+    result = testListDevices()
     if result:
         print "Fail! ", result
         return
@@ -143,7 +230,13 @@ def testModule():
         print "Fail! ", result
         return
 
-    device_control.connectedDevice = MonkeyRunner.waitForConnection()
+    startAutoConnection()
+    time.sleep(5)
+
+    result = testSetVirtualScreen()
+    if result:
+        print "Fail!", result
+        return
 
     result = testTouch()
     if result:

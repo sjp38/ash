@@ -1,3 +1,4 @@
+#!/usr/bin/env monkeyrunner
 # Path setting for Damn Windows.
 import sys
 import os
@@ -57,7 +58,12 @@ def testExecution():
             "startGui test_xmls/gui_keylayout_sample.xml",
             "startGuiAutoRefresh",
             "stopGuiAutoRefresh",
-            "stopGui"
+            "stopGui",
+            "startDirectControl",
+            "stopDirectControl",
+            "startAutoConnection",
+            "stopAutoConnection",
+            "focus 0"
             ]
     try:
         for cmd in testcmds:

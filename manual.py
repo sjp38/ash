@@ -3,7 +3,7 @@
 # Author : SeongJae Pakr <sj38.park@gmail.com>
 
 CMDS = """
-listDevices
+listDevices [-ash] [-serial]
 connectDevice [device name]
 
 startGui <keymapfilename>
@@ -11,14 +11,23 @@ startGuiAutoReferesh
 stopGuiAutoRefresh
 stopGui
 
+startDirectControl
+stopDirectControl
+startAutoConnection
+stopAutoConnection
+
+focus <order of device in device list>...
+focusTo <left | right>
+
 sleep <time in seconds>
 
 exit
 help [command]
 
-touch <DOWN | UP | DOWN_AND_UP> <x> <y>
+setVirtualScreen <width> <height>
+touch <DOWN | UP | DOWN_AND_UP> <x> <y> [-v]
 press <DOWN | UP | DOWN_AND_UP> <key code>
-drag <x1> <y1> <x2> <y2> [duration]
+drag <x1> <y1> <x2> <y2> [duration] [-v]
 type <text>
 wake
 reboot

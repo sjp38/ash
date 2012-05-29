@@ -295,6 +295,6 @@ def getReferenceByTrigger(trigger):
     if not trigger.mode:
         trigger.mode = currentTriggerMode
     if not isTriggerExist(trigger):
-        log.d(TAG, "Requested not existing trigger. %s" % trigger)
+#        log.d(TAG, "Requested not existing trigger. %s" % trigger)
         return "There is no trigger like that."
     return triggers[trigger.mode][trigger.key]
