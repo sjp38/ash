@@ -13,7 +13,7 @@ import directControl
 
 TAG = "Ash_deviceControl"
 CONNECTION_TIMEOUT = 10
-AGI_CONNECTION_LIMIT = 5
+AGI_CONNECTION_LIMIT = 150
 
 agiConnectionPort = 6789
 connectedDevices = []
@@ -108,7 +108,8 @@ def _connectTo(serialnos):
         if device.socket in reusedSockets:
             continue
         changed = True
-        device.socket.close()
+        if device.socket:
+            device.socket.close()
 
     if changed:
         connectedDevices = newConnectedDevices
@@ -184,6 +185,7 @@ def showCursor(x, y, isPressed):
             sock.sendall(query)
         except Exception, e:
             log.e(TAG, "Fail to send query to AGI! Connect again.", e)
+            sock.close()
             device.sock = _doConnectAgi(device.serialno)
 
 # HIDE
@@ -199,6 +201,7 @@ def hideCursor():
             sock.sendall(query)
         except Exception, e:
             log.e(TAG, "Fail to send query to AGI! Connect again.", e)
+            sock.close()
             device.sock = _doConnectAgi(device.serialno)
 
 # @param    name    serial_no of device.

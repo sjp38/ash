@@ -78,7 +78,7 @@ def getContentPane():
 
         cursorImg = BufferedImage(16,16,BufferedImage.TYPE_INT_ARGB)
         blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, Point(0,0), "blank cursor")
-#        mainScreen.setCursor(blankCursor)
+        mainScreen.setCursor(blankCursor)
         mainScreen.setPreferredSize(
                 Dimension(REMAP_WIDTH + MARGIN, REMAP_HEIGHT + MARGIN))
         mainScreen.setText("main screen!")
