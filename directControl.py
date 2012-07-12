@@ -327,7 +327,6 @@ class ScrKeyListener(KeyListener):
             if isDown: action = "DOWN"
             else: action = "UP"
 
-            print "action:%s, keyInput:%s" % (action, keyInput)
             command = data.Command("press", [action, keyInput])
             cmd.CmdExecutor.execute(command)
 
