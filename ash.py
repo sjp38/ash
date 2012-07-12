@@ -1,6 +1,6 @@
 #!/usr/bin/env monkeyrunner
 # Main entry point of Ash. Run with CLI.
-# Author : SeongJae Pakr <sj38.park@gmail.com>
+# Author : SeongJae Park <sj38.park@gmail.com>
 
 from java.lang import System
 
