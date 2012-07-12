@@ -15,7 +15,9 @@ TAG = "Ash_deviceControl"
 CONNECTION_TIMEOUT = 10
 AGI_CONNECTION_LIMIT = 150
 
-agiConnectionPort = 6789
+AGI_CONN_PORT_HEAD = 6789
+AGI_CONN_PORT_TAIL = 8789
+agiConnectionPort = AGI_CONN_PORT_HEAD
 connectedDevices = []
 devConnListener = None
 stopAutoConnectionFlag = True
@@ -97,7 +99,6 @@ def _connectTo(serialnos):
 
             name = mdevice.getProperty("build.model")
 
-            # TODO : Reuse reusable port number.
             socket = _connectAgi(serialno)
 
             device = Device(serialno, mdevice, socket, resolScaleRatio, (width, height),
@@ -143,18 +144,22 @@ def _getUsbConnectedDevices():
     return parsed
 
 def _connectAgi(serialno):
+    log.i(TAG, "Connect AGI at " + serialno)
     result = None
     for i in range(AGI_CONNECTION_LIMIT):
         try:
             result = _doConnectAgi(serialno)
         except Exception, e:
-            log.e(TAG, "Fail to connect AGI! Did you turn on AGI?"
-                    + " Try again.", e)
+            if i == AGI_CONNECTION_LIMIT:
+                # TODO Cleanup this device from device list.
+                log.e(TAG, "Failed to connect AGI.")
     return result
 
 def _doConnectAgi(serialno):
     global agiConnectionPort
     agiConnectionPort += 1
+    if agiConnectionPort > AGI_CONN_PORT_TAIL:
+        agiConnectionPort = AGI_CONN_PORT_HEAD
     cmd = "adb -s %s forward tcp:%d tcp:9991" % (serialno, agiConnectionPort)
     os.popen(cmd)
 
@@ -186,7 +191,7 @@ def showCursor(x, y, isPressed):
         except Exception, e:
             log.e(TAG, "Fail to send query to AGI! Connect again.", e)
             sock.close()
-            device.sock = _doConnectAgi(device.serialno)
+            device.sock = _connectAgi(device.serialno)
 
 # HIDE
 def hideCursor():
@@ -202,7 +207,7 @@ def hideCursor():
         except Exception, e:
             log.e(TAG, "Fail to send query to AGI! Connect again.", e)
             sock.close()
-            device.sock = _doConnectAgi(device.serialno)
+            device.sock = _connectAgi(device.serialno)
 
 # @param    name    serial_no of device.
 def connect(name):
