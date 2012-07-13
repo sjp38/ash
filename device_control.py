@@ -190,7 +190,7 @@ def showCursor(x, y, isPressed):
             sock.sendall(query)
         except Exception, e:
             log.e(TAG, "Fail to send query to AGI! Connect again.", e)
-            sock.close()
+            if sock: sock.close()
             device.sock = _connectAgi(device.serialno)
 
 # HIDE
@@ -206,7 +206,7 @@ def hideCursor():
             sock.sendall(query)
         except Exception, e:
             log.e(TAG, "Fail to send query to AGI! Connect again.", e)
-            sock.close()
+            if sock: sock.close()
             device.sock = _connectAgi(device.serialno)
 
 # @param    name    serial_no of device.
