@@ -1,49 +1,42 @@
 #!/usr/bin/env monkeyrunner
+#!/usr/bin/env python
 # Main entry point of Ash. Run with CLI.
 # Author : SeongJae Park <sj38.park@gmail.com>
+# License : GPL v3
 
-from java.lang import System
+#from java.lang import System
 
 import sys
+import ashval
 
-if System.getProperty("os.name").startswith("Windows"):
-    import os
-    srcFileDir = os.path.dirname(os.path.abspath(__file__))
-    os.chdir(srcFileDir)
-    sys.path = [srcFileDir] + sys.path
+#if System.getProperty("os.name").startswith("Windows"):
+#    import os
+#    srcFileDir = os.path.dirname(os.path.abspath(__file__))
+#    os.chdir(srcFileDir)
+#    sys.path = [srcFileDir] + sys.path
 
 import log
-from cmd import CmdParser, CmdExecutor
 import manual
 
 TAG = "Ash"
 
-def printResult(result):
+def printResult(result, depth=0):
     if result.__class__ == list:
         for subResult in result:
             if subResult.__class__ == list:
-                printResult(subResult)
-            elif subResult: print subResult
+                printResult(subResult, depth + 1)
+            elif subResult: print depth * '\t' + '%s' % subResult
     else:
         print result
-
-def parseAndExecute(userInput):
-#    try:
-        parsed = CmdParser.parse(userInput)
-        result = CmdExecutor.execute(parsed)
-        if result:
-            printResult(result)
-    # Errors came with exception.
-#    except Exception, e:
-#        log.e(TAG, "Exception.", e) 
 
 if __name__ == "__main__":
     if len(sys.argv) >= 2:
         initCmd = "execScript " + sys.argv[1]
-        parseAndExecute(initCmd)
+        ashval.ashval(initCmd)
     while (1):
-        userInput = raw_input(">>> ")
+        userInput = raw_input("ash>> ")
         if (userInput == ""):
             print manual.CMDS
             continue
-        parseAndExecute(userInput)
+        result = ashval.ashval(userInput)
+        if result: printResult(result)
