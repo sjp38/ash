@@ -147,6 +147,9 @@ def show(depth=0):
 
 # Set event mode
 def set_mode(mode):
+    if mode == "default":
+        mode = DEFAULT_EVENT_MODE
+
     global _current_event_mode
     if mode:
         _current_event_mode = mode
