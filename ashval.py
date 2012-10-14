@@ -8,6 +8,7 @@ import time
 import data
 #TODO: Make monkey-dependant part unittest-able
 import devmgr
+import dui
 
 RECORD_FILTER = ("arg", "record", "record_stop")
 
@@ -94,9 +95,11 @@ def sleep(time_):
             "Sleep fail! can't convert argument to float"
     time.sleep(time_)
 
+def start_dui():
+    dui.start_dui()
+
 # Return ash function(list) or python function object.
 def _get_code(expr):
-    print "_get_code. expr : %s" % expr
     if not isinstance(expr, list) or not isinstance(expr[0], str):
         return False
     for module in [data, sys.modules[__name__], devmgr]:
@@ -110,7 +113,6 @@ def _get_code(expr):
 _argstack = []
 
 def ashval(expr, is_raw = True):
-#    print "ashval! %s %s" % (expr, is_raw)
     # 1. Make raw expression(python string) to list(python list with strings)
     # 2-1. If function call, evaluate args and execute function, return value.
     # 2-2. If not function call, It's just list. return itself.
