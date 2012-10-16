@@ -12,14 +12,17 @@ import time
 
 from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice, MonkeyImage
 
-import log
-
 TYPE_ANDROID = "android"
 TYPE_PC = "pc"
 CONNECT_FAIL = "Fail to connect"
 FOCUS_FAIL = "Fail to focus"
 
 MONK_CONN_TIMEOUT = 10
+_AGI_CONN_LIMIT = 150
+_AGI_CONN_PORT_HEAD = 6789
+_AGI_CONN_PORT_TAIL = 9789
+_agi_conn_port = _AGI_CONN_PORT_HEAD
+
 
 # device is list of type, id, name, connections, focused, resolution.
 # type is "android" or "pc"
@@ -68,6 +71,34 @@ def _convert_arg(arg, type_, range_):
         return "argument is not in range of %d, %d" % (range_[0], range_[1])
     return arg
 
+def _connect_agi(id_):
+    result = None
+    for i in range(_AGI_CONN_LIMIT):
+        try:
+            result = _do_connect_agi(id_)
+        except Exception, e:
+            print "exception!!!"
+            if i == _AGI_CONN_LIMIT:
+                # TODO Cleanup this device from device list.
+                print "Failed to connect AGI."
+    return result
+
+def _do_connect_agi(id_):
+    global _agi_conn_port
+    _agi_conn_port += 1
+    if _agi_conn_port > _AGI_CONN_PORT_TAIL:
+        _agi_conn_port = _AGI_CONN_PORT_HEAD
+    cmd = "adb -s %s forward tcp:%d tcp:9991" % (id_, _agi_conn_port)
+    os.popen(cmd)
+
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock.connect(("127.0.0.1", _agi_conn_port))
+    return sock
+
+
+
 def connect(nth):
     devices_ = devices()
     nth = _convert_arg(nth, int, (0, len(devices_) - 1))
@@ -86,7 +117,7 @@ def connect(nth):
     name = " ".join(dev_base_info[2:])
     mdev = MonkeyRunner.waitForConnection(MONK_CONN_TIMEOUT, devid)
     #TODO: Do agi work
-    agiconn = None
+    agiconn = _connect_agi(devid)
     focused = False
     resolution = [mdev.getProperty("display.width"),
             mdev.getProperty("display.height")]
@@ -171,6 +202,36 @@ def touch(type_, x, y):
     y = _convert_arg(y, int, None)
     type_ = eval("MonkeyDevice.%s" % type_)
     _control_android(False, lambda x,y: x.touch(y[0], y[1], y[2]), x, y, type_)
+
+def show_cursor(x, y, pressed=False):
+    for device in _devices:
+        if device[4]:
+            query = "SHOW %d %d" % (int(x), int(y))
+            if pressed:
+                query += " pressed"
+            length = "%03d" % len(query)
+            try:
+                device[3][1].sendall(length)
+                device[3][1].sendall(query)
+            except:
+                print "Fail to sen AGI query! connect again"
+                if device[3][1]:
+                    device[3][1].close()
+                    device[3][1] = _connect_agi(device[1])
+
+def hide_cursor():
+    for device in _devices:
+        if device[4]:
+            query = "HIDE"
+            length = "%03d" % len(query)
+            try:
+                device[3][1].sendall(length)
+                device[3][1].sendall(query)
+            except:
+                print "Fail to send AGI query! connect again"
+                if device[3][1]:
+                    device[3][1].close()
+                    device[3][1] = _connect_agi(device[1])
 
 def wake():
     _control_android(False, lambda x,y: x.wake())
