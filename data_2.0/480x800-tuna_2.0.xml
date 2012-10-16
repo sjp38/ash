@@ -3,6 +3,156 @@
     <callback>
         <list>
             <el>__default__</el>
+            <el>mouse</el>
+            <el>press</el>
+        </list>
+        <list>
+            <el>touch</el>
+            <el>DOWN</el>
+            <list>
+                <el>arg</el>
+                <el>1</el>
+            </list>
+            <list>
+                <el>arg</el>
+                <el>2</el>
+            </list>
+        </list>
+    </callback>
+    <callback>
+        <list>
+            <el>__default__</el>
+            <el>mouse</el>
+            <el>release</el>
+        </list>
+        <list>
+            <el>touch</el>
+            <el>UP</el>
+            <list>
+                <el>arg</el>
+                <el>1</el>
+            </list>
+            <list>
+                <el>arg</el>
+                <el>2</el>
+            </list>
+        </list>
+    </callback>
+
+    <callback>
+        <list>
+            <el>__default__</el>
+            <el>mouse</el>
+            <el>move</el>
+        </list>
+        <list>
+            <el>show_cursor</el>
+            <list>
+                <el>arg</el>
+                <el>1</el>
+            </list>
+            <list>
+                <el>arg</el>
+                <el>2</el>
+            </list>
+        </list>
+    </callback>
+
+    <callback>
+        <list>
+            <el>__default__</el>
+            <el>keyboard</el>
+            <el>Ctrl-R_DOWN</el>
+        </list>
+        <list>
+            <list>
+                <el>record</el>
+                <el>record_demo</el>
+            </list>
+        </list>
+    </callback>
+    <callback>
+        <list>
+            <el>__default__</el>
+            <el>keyboard</el>
+            <el>Ctrl-D_DOWN</el>
+        </list>
+        <list>
+            <list>
+                <el>record_stop</el>
+            </list>
+        </list>
+    </callback>
+
+    <callback>
+        <list>
+            <el>__default__</el>
+            <el>keyboard</el>
+            <el>Ctrl-Z_DOWN</el>
+        </list>
+        <list>
+            <list>
+                <el>record_demo</el>
+            </list>
+        </list>
+    </callback>
+
+    <callback>
+        <list>
+            <el>__default__</el>
+            <el>keyboard</el>
+            <el>Ctrl-Q_DOWN</el>
+        </list>
+        <list>
+            <list>
+                <el>take_snapshot</el>
+            </list>
+        </list>
+    </callback>
+
+    <callback>
+        <list>
+            <el>googleKeyboard</el>
+            <el>keyboard</el>
+            <el>Ctrl-Z_DOWN</el>
+        </list>
+        <list>
+            <list>
+                <el>record_demo</el>
+            </list>
+        </list>
+    </callback>
+
+    <callback>
+        <list>
+            <el>googleKeyboard</el>
+            <el>keyboard</el>
+            <el>Ctrl-R_DOWN</el>
+        </list>
+        <list>
+            <list>
+                <el>record</el>
+                <el>record_demo</el>
+            </list>
+        </list>
+    </callback>
+    <callback>
+        <list>
+            <el>googleKeyboard</el>
+            <el>keyboard</el>
+            <el>Ctrl-D_DOWN</el>
+        </list>
+        <list>
+            <list>
+                <el>record_stop</el>
+            </list>
+        </list>
+    </callback>
+
+
+    <callback>
+        <list>
+            <el>__default__</el>
             <el>keyboard</el>
             <el>Ctrl-S_DOWN</el>
         </list>
