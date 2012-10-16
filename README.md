@@ -9,9 +9,8 @@ Anyone can use codes of Ash everywhere. But, should follow limitation of GPL v3.
 ## How to use
 1. You should install Android SDK. Android SDK's tools directory should be exist in your PATH.
 
-2-1. `$ ./ash.py {init_gui-galaxyNexus | init_gui_galaxyS2}.ash` for GUI mode.
+2. `$ ./ash.py` for GUI mode.
 
-2-2. `$ ./ash.py init_directControl-maguro.ash` for direct control feature mode.
 
 
 ## Version
