@@ -20,12 +20,12 @@ import manual
 
 TAG = "Ash"
 
-def printResult(result, depth=0):
+def print_result(result, depth=0):
     if result.__class__ == list:
-        for subResult in result:
-            if subResult.__class__ == list:
-                printResult(subResult, depth + 1)
-            elif subResult: print depth * '\t' + '%s' % subResult
+        for sub_result in result:
+            if sub_result.__class__ == list:
+                print_result(sub_result, depth + 1)
+            elif sub_result: print depth * '\t' + '%s' % sub_result
     else:
         print result
 
@@ -38,12 +38,12 @@ def get_expression():
 
 if __name__ == "__main__":
     if len(sys.argv) >= 2:
-        initCmd = "execScript " + sys.argv[1]
-        ashval.ashval(initCmd)
+        init_cmd = "execScript " + sys.argv[1]
+        ashval.ashval(init_cmd)
     while (1):
         user_input = get_expression()
         if (user_input == ""):
             print manual.CMDS
             continue
         result = ashval.ashval(user_input)
-        if result: printResult(result)
+        if result: print_result(result)
