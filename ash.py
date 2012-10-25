@@ -29,14 +29,21 @@ def printResult(result, depth=0):
     else:
         print result
 
+def get_expression():
+    user_expr = raw_input("ash >>>")
+    while user_expr[-1] == '\\':
+        user_expr = user_expr[0:-1]
+        user_expr += raw_input("   ")
+    return user_expr
+
 if __name__ == "__main__":
     if len(sys.argv) >= 2:
         initCmd = "execScript " + sys.argv[1]
         ashval.ashval(initCmd)
     while (1):
-        userInput = raw_input("ash>> ")
-        if (userInput == ""):
+        user_input = get_expression()
+        if (user_input == ""):
             print manual.CMDS
             continue
-        result = ashval.ashval(userInput)
+        result = ashval.ashval(user_input)
         if result: printResult(result)
