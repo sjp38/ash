@@ -5,6 +5,8 @@ import copy
 import sys
 import time
 
+import ash
+import ashmon
 import data
 #TODO: Make monkey-dependant part unittest-able
 import devmgr
@@ -102,8 +104,9 @@ def start_dui():
 def _get_code(expr):
     if not isinstance(expr, list) or not isinstance(expr[0], str):
         return False
-    for module in [data, sys.modules[__name__], devmgr]:
-#    for module in [data, sys.modules[__name__]]:
+# For test, manually switch commenting...
+    for module in [ash, ashmon, data, sys.modules[__name__], devmgr]:
+#    for module in [ash, ashmon, data, sys.modules[__name__]]:
         if hasattr(module, expr[0]):
             f = getattr(module, expr[0])
             if hasattr(f, '__call__'):
