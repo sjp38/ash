@@ -38,7 +38,7 @@ def print_result(result, depth=0):
         print result
 
 def _get_expression():
-    user_expr = raw_input("ash >>>")
+    user_expr = raw_input("ash$ ")
     while user_expr[-1] == '\\':
         user_expr = user_expr[0:-1]
         user_expr += raw_input("   ")
