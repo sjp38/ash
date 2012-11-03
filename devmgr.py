@@ -11,6 +11,11 @@ import threading
 import time
 
 from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice, MonkeyImage
+from java.awt import Robot
+from java.awt.event import InputEvent, KeyEvent
+
+import ash
+import ashmon
 
 TYPE_ANDROID = "android"
 TYPE_PC = "pc"
@@ -22,6 +27,8 @@ _AGI_CONN_LIMIT = 150
 _AGI_CONN_PORT_HEAD = 6789
 _AGI_CONN_PORT_TAIL = 9789
 _agi_conn_port = _AGI_CONN_PORT_HEAD
+
+_DEVMGR_PORT = 10101
 
 DEV_TYPE_INDX = 0
 DEV_ID_INDX = 1
@@ -42,6 +49,14 @@ DEV_RESOL_INDX = 5
 
 _devices = []
 _stop_device_lookup_thread = False
+
+robot = Robot()
+_stop_accepting = False
+_stop_listening = False
+waiter_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+waiter_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+waiter_sock.bind(('', _DEVMGR_PORT))
+waiter_sock.listen(1)
 
 def devices():
     f = os.popen("adb devices")
@@ -111,32 +126,52 @@ def _do_connect_agi(id_):
     sock.connect(("127.0.0.1", _agi_conn_port))
     return sock
 
-
-
-def connect(nth):
-    devices_ = devices()
-    nth = _convert_arg(nth, int, (0, len(devices_) - 1))
-    if not isinstance(nth, int):
-        return "%s : %s" % (CONNECT_FAIL, nth)
-
-    dev_base_info = devices_[nth].split()
-    devid = dev_base_info[1]
+# If specified device is already connected, recycle and return True
+# else, return False
+def _recycle_connected(device_id):
     for i in range(len(_devices)):
         device = _devices[i]
-        if device[DEV_ID_INDX] == devid:
+        if device[DEV_ID_INDX] == device_id:
             del _devices[i]
             _devices.append(device)
-            return
+            return True
+    return False
 
-    name = " ".join(dev_base_info[2:])
-    mdev = MonkeyRunner.waitForConnection(MONK_CONN_TIMEOUT, devid)
-    #TODO: Do agi work
-    agiconn = _connect_agi(devid)
-    focused = False
-    resolution = [mdev.getProperty("display.width"),
-            mdev.getProperty("display.height")]
-    _devices.append([TYPE_ANDROID, devid, name,
-            [mdev, agiconn], focused, resolution])
+# Connect devmgr of ash at type_, devid.
+def _connect_devmgr(devid, type_):
+    if _recycle_connected(devid):
+        return
+    if type_ == TYPE_ANDROID:
+        # TODO: Connect android via ip. Currently, only serial.
+        mdev = MonkeyRunner.waitForConnection(MONK_CONN_TIMEOUT, devid)
+        #TODO: Install/start AGI from here
+        agiconn = _connect_agi(devid)
+        focused = False
+        name = mdev.getProperty("build.model")
+        resolution = [mdev.getProperty("display.width"),
+                mdev.getProperty("display.height")]
+        _devices.append([TYPE_ANDROID, devid, name,
+                [mdev, agiconn], focused, resolution])
+    elif type_ == TYPE_PC:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.connect((devid, _DEVMGR_PORT))
+        _devices.append([TYPE_PC, devid, devid, [sock], False, [1024, 768]])
+
+# if type_ is none, id_ is just index from devices list.
+def connect(id_, type_=None):
+    if not type_:
+        devices_ = devices()
+        nth = _convert_arg(id_, int, (0, len(devices_) - 1))
+        if not isinstance(nth, int):
+            return "%s : %s" % (CONNECT_FAIL, nth)
+
+        dev_base_info = devices_[nth].split()
+        devid = dev_base_info[1]
+        # TODO: Support PC connection via index, too.
+        _connect_devmgr(devid, TYPE_ANDROID)
+    else:
+        return _connect_devmgr(id_, type_)
 
 # focus with no argument is same as clear focus.
 def focus(*nths):
@@ -249,6 +284,107 @@ def hide_cursor():
 
 def wake():
     _control_android(False, lambda x,y: x.wake())
+
+# TODO: should merge with _contro_android and this.
+def _control_pc(collect_result, expr):
+    results = []
+    for dev in _devices:
+        if dev[0] != TYPE_PC:
+            continue
+        if dev[4]:
+            sock = dev[DEV_CONN_INDX][0]
+            sock.sendall(expr + ashmon.END_OF_MSG)
+            tokens = ''
+            while True:
+                received = sock.recv(1024)
+                if not received:
+                    print "connection with devmgrmon crashed!"
+                    sock.close()
+                msg, tokens = ashmon.get_complete_message(received, tokens)
+                if msg:
+                    result = eval(msg)
+                    break
+    if collect_result:
+        return results
+
+# If target_me, control me.
+# If not, control connected devices.
+def move_mouse(x, y, target_me=False):
+    if not target_me:
+        return _control_pc(False, "move_mouse %s %s True" % (x, y))
+    #TODO: check bound value of x, type exception
+    robot.mouseMove(int(x), int(y))
+
+def press_mouse(right_button=False, target_me=False):
+    if not target_me:
+        return _control_pc(False, "press_mouse %s True" % (right_button))
+    button = InputEvent.BUTTON1_MASK
+    if eval(right_button):
+        button = InputEvent.BUTTON3_MASK
+    robot.mousePress(button)
+
+def release_mouse(right_button=False, target_me=False):
+    if not target_me:
+        return _control_pc(False, "release_mouse %s True" % (right_button))
+    button = InputEvent.BUTTON1_MASK
+    if eval(right_button):
+        button = InputEvent.BUTTON3_MASK
+    robot.mouseRelease(button)
+
+def wheel_mouse(notches, target_me=False):
+    if not target_me:
+        return _control_pc(False, "wheel_mouse %s True" % notches)
+    robot.mouseWheel(int(notches))
+
+def press_key(keycode, target_me=False):
+    if not target_me:
+        return _control_pc(False, "press_key %s True" % keycode)
+    robot.keyPress(eval("KeyEvent.VK_%s" % keycode))
+
+def release_key(keycode, target_me=False):
+    if not target_me:
+        return _control_pc(False, "release_key %s True" % keycode)
+    robot.keyRelease(eval("KeyEvent.VK_%s" % keycode))
+
+def start_devmgrmon():
+    _stop_listening = False
+    _stop_accepting = False
+    acceptor = _AcceptorThread()
+    acceptor.start()
+
+class _AcceptorThread(threading.Thread):
+    def run(self):
+        global waiter_sock
+        while True:
+            if _stop_accepting:
+                global _stop_listening
+                _stop_listening = False
+                break
+            conn, addr = waiter_sock.accept()
+            print "devmgr connected by ash. start listener"
+            listener = _ListenerThread(conn)
+            listener.start()
+
+class _ListenerThread(threading.Thread):
+    def __init__(self, conn):
+        threading.Thread.__init__(self)
+        self.conn = conn
+
+    def run(self):
+        tokens = ''
+        while True:
+            if _stop_listening:
+                break
+            received = self.conn.recv(1024)
+            if not received:
+                print "devmgr not received! stop listening!"
+                break
+            msg, tokens = ashmon.get_complete_message(received, tokens)
+            if msg:
+                result = ash.input(msg)
+                self.conn.sendall("%s%s" % (result, ashmon.END_OF_MSG))
+        self.conn.close()
+
 
 # Device connection lookup thread.
 class _DeviceLookupThread(threading.Thread):
