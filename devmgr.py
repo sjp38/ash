@@ -58,13 +58,20 @@ def devices():
     #TODO: See PCs.
     return parsed
 
-def connected_devices():
+def connected_devices(develop_view=None):
     results = []
     for device in _devices:
-        results.append("%s %s %s %s, %s, %s" % (
-            device[DEV_TYPE_INDX], device[DEV_ID_INDX],
-            device[DEV_NAME_INDX], device[DEV_CONN_INDX],
-            device[DEV_FOCUSED_INDX], device[DEV_RESOL_INDX]))
+        if develop_view:
+            results.append("%s %s %s %s, %s, %s" % (
+                device[DEV_TYPE_INDX], device[DEV_ID_INDX],
+                device[DEV_NAME_INDX], device[DEV_CONN_INDX],
+                device[DEV_FOCUSED_INDX], device[DEV_RESOL_INDX]))
+        else:
+            focused = ""
+            if device[DEV_FOCUSED_INDX]:
+                focused = "[focused]"
+            results.append("%s %s %s" %
+                    (focused, device[DEV_TYPE_INDX], device[DEV_NAME_INDX]))
     return results
 
 def _convert_arg(arg, type_, range_):
