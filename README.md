@@ -1,9 +1,13 @@
-# Ash
- Ash is a program for Android device control from desktop using CLI / GUI / direct control.
+# ash
+ ash is a program for Android device controlling from desktop using CLI / GUI / direct control.
+
+# News
+We are developing version 2.0.
+It will be announced at Google HackFair, Korea and will be released by 19th, November 2012.
 
 ## License
 GPL v3.
-Anyone can use codes of Ash everywhere. But, should follow limitation of GPL v3.(http://www.gnu.org/licenses/gpl-3.0.html)
+Anyone can use code of Ash everywhere. But, should follow limitation of GPL v3.(http://www.gnu.org/licenses/gpl-3.0.html)
 
 
 ## How to use
