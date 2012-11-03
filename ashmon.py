@@ -70,6 +70,4 @@ class _ListenerThread(threading.Thread):
             if msg:
                 result = ash.input(msg)
                 self.conn.sendall("%s%s" % (result, END_OF_MSG))
-            else:
-                exprs.append(received)
         self.conn.close()
