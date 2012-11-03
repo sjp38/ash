@@ -115,6 +115,14 @@ def _get_code(expr):
 
 _argstack = []
 
+# evaluate param's elements.
+# e.g, execute [[touch DOWN 100 200] [touch UP 100 200]]
+def execute(exprs):
+    results = []
+    for expr in exprs:
+        results.append(ashval(expr))
+    return results
+
 def ashval(expr, is_raw = True):
     # 1. Make raw expression(python string) to list(python list with strings)
     # 2-1. If function call, evaluate args and execute function, return value.
