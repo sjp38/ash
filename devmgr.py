@@ -285,7 +285,6 @@ def hide_cursor():
 def wake():
     _control_android(False, lambda x,y: x.wake())
 
-# TODO: should merge with _contro_android and this.
 def _control_pc(collect_result, expr):
     results = []
     for dev in _devices:
