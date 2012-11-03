@@ -1,5 +1,0 @@
-load default_data/480x800-galaxyS2/data.xml
-connectDevice
-switchTriggerMode googleKeyboard
-startGui default_data/gui_keylayout.xml
-startGuiAutoRefresh

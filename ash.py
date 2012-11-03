@@ -56,6 +56,26 @@ def disconnect_ashmon():
 def input(expr):
     return ashval.ashval(expr)
 
+def exec_script(file_path):
+    f = open(file_path, "r")
+    lines = f.readlines()
+    f.close()
+
+    expr = ''
+    for line in lines:
+        if line[-1] == '\n':
+            line = line[0:-1]
+        if line == '' or line[0] == '#':
+            continue
+        expr += line
+        if expr[-1] == '\\':
+            expr = expr[0:-1]
+        elif expr != '':
+            result = input(expr)
+            if result:
+                print_result(result)
+            expr = ''
+
 def _get_and_process_user_input():
     user_input = _get_expression()
     if (user_input == ""):
@@ -89,7 +109,7 @@ def _get_and_process_user_input():
 
 if __name__ == "__main__":
     if len(sys.argv) >= 2:
-        init_cmd = "execScript " + sys.argv[1]
+        init_cmd = "exec_script " + sys.argv[1]
         ashval.ashval(init_cmd)
     while (1):
         _get_and_process_user_input()
