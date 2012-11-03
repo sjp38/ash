@@ -23,6 +23,12 @@ _AGI_CONN_PORT_HEAD = 6789
 _AGI_CONN_PORT_TAIL = 9789
 _agi_conn_port = _AGI_CONN_PORT_HEAD
 
+DEV_TYPE_INDX = 0
+DEV_ID_INDX = 1
+DEV_NAME_INDX = 2
+DEV_CONN_INDX = 3
+DEV_FOCUSED_INDX = 4
+DEV_RESOL_INDX = 5
 
 # device is list of type, id, name, connections, focused, resolution.
 # type is "android" or "pc"
@@ -56,8 +62,9 @@ def connected_devices():
     results = []
     for device in _devices:
         results.append("%s %s %s %s, %s, %s" % (
-            device[0], device[1], device[2],
-            device[3],device[4], device[5]))
+            device[DEV_TYPE_INDX], device[DEV_ID_INDX],
+            device[DEV_NAME_INDX], device[DEV_CONN_INDX],
+            device[DEV_FOCUSED_INDX], device[DEV_RESOL_INDX]))
     return results
 
 def _convert_arg(arg, type_, range_):
@@ -109,7 +116,7 @@ def connect(nth):
     devid = dev_base_info[1]
     for i in range(len(_devices)):
         device = _devices[i]
-        if device[1] == devid:
+        if device[DEV_ID_INDX] == devid:
             del _devices[i]
             _devices.append(device)
             return
@@ -134,17 +141,17 @@ def focus(*nths):
 
         will_focuses.append(nth)
     for device in _devices:
-        device[4] = False
+        device[DEV_FOCUSED_INDX] = False
     for i in will_focuses:
-        _devices[i][4] = True
+        _devices[i][DEV_FOCUSED_INDX] = True
 
 def _control_android(collect_result, lambda_, *args):
     results = []
     for dev in _devices:
-        if dev[0] != TYPE_ANDROID:
+        if dev[DEV_TYPE_INDX] != TYPE_ANDROID:
             continue
         if dev[4]:
-            results.append(lambda_(dev[3][0], args))
+            results.append(lambda_(dev[DEV_CONN_INDX][0], args))
     if collect_result:
         return results
 
@@ -205,33 +212,33 @@ def touch(type_, x, y):
 
 def show_cursor(x, y, pressed=False):
     for device in _devices:
-        if device[4]:
+        if device[DEV_FOCUSED_INDX]:
             query = "SHOW %d %d" % (int(x), int(y))
             if pressed:
                 query += " pressed"
             length = "%03d" % len(query)
             try:
-                device[3][1].sendall(length)
-                device[3][1].sendall(query)
+                device[DEV_CONN_INDX][1].sendall(length)
+                device[DEV_CONN_INDX][1].sendall(query)
             except:
                 print "Fail to sen AGI query! connect again"
-                if device[3][1]:
-                    device[3][1].close()
-                    device[3][1] = _connect_agi(device[1])
+                if device[DEV_CONN_INDX][1]:
+                    device[DEV_CONN_INDX][1].close()
+                    device[DEV_CONN_INDX][1] = _connect_agi(device[1])
 
 def hide_cursor():
     for device in _devices:
-        if device[4]:
+        if device[DEV_FOCUSED_INDX]:
             query = "HIDE"
             length = "%03d" % len(query)
             try:
-                device[3][1].sendall(length)
-                device[3][1].sendall(query)
+                device[DEV_CONN_INDX][1].sendall(length)
+                device[DEV_CONN_INDX][1].sendall(query)
             except:
                 print "Fail to send AGI query! connect again"
-                if device[3][1]:
-                    device[3][1].close()
-                    device[3][1] = _connect_agi(device[1])
+                if device[DEV_CONN_INDX][1]:
+                    device[DEV_CONN_INDX][1].close()
+                    device[DEV_CONN_INDX][1] = _connect_agi(device[1])
 
 def wake():
     _control_android(False, lambda x,y: x.wake())
