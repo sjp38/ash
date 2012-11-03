@@ -11,7 +11,7 @@ import threading
 import time
 
 from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice, MonkeyImage
-from java.awt import Robot
+from java.awt import Robot, Toolkit
 from java.awt.event import InputEvent, KeyEvent
 
 import ash
@@ -57,6 +57,9 @@ waiter_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 waiter_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 waiter_sock.bind(('', _DEVMGR_PORT))
 waiter_sock.listen(1)
+
+dimension = Toolkit.getDefaultToolkit().getScreenSize()
+_resolution = [dimension.width, dimension.height]
 
 def devices():
     f = os.popen("adb devices")
@@ -148,8 +151,8 @@ def _connect_devmgr(devid, type_):
         agiconn = _connect_agi(devid)
         focused = False
         name = mdev.getProperty("build.model")
-        resolution = [mdev.getProperty("display.width"),
-                mdev.getProperty("display.height")]
+        resolution = [int(mdev.getProperty("display.width")),
+                int(mdev.getProperty("display.height"))]
         _devices.append([TYPE_ANDROID, devid, name,
                 [mdev, agiconn], focused, resolution])
     elif type_ == TYPE_PC:
@@ -193,69 +196,105 @@ def _control_android(collect_result, lambda_, *args):
         if dev[DEV_TYPE_INDX] != TYPE_ANDROID:
             continue
         if dev[4]:
-            results.append(lambda_(dev[DEV_CONN_INDX][0], args))
+            results.append(lambda_(dev[DEV_CONN_INDX][0], args,
+                dev[DEV_RESOL_INDX]))
     if collect_result:
         return results
 
-def drag(x1, y1, x2, y2, duration=0.1, steps=10):
-    x1 = _convert_arg(x1, int, None)
-    y1 = _convert_arg(y1, int, None)
-    x2 = _convert_arg(x2, int, None)
-    y2 = _convert_arg(y2, int, None)
+def drag(x1, y1, x2, y2, percentage=False, duration=0.1, steps=10):
+    if percentage == "False":
+        percentage = False
+    if percentage:
+        x1 = _convert_arg(x1, float, None) / 100.0
+        y1 = _convert_arg(y1, float, None) / 100.0
+        x2 = _convert_arg(x2, float, None) / 100.0
+        y2 = _convert_arg(y2, float, None) / 100.0
+    else:
+        x1 = _convert_arg(x1, int, None)
+        y1 = _convert_arg(y1, int, None)
+        x2 = _convert_arg(x2, int, None)
+        y2 = _convert_arg(y2, int, None)
     duration = _convert_arg(duration, float, None)
     steps = _convert_arg(steps, int, None)
+    if percentage:
+        _control_android(False,
+                lambda x,y,z: x.drag((int(y[0] * z[0]), int(y[1] * z[1]),),
+                    (int(y[2] * z[0]), int(y[3] * z[1])), y[4], y[5]),
+                x1, y1, x2, y2, duration, steps)
+        return
     _control_android(False,
-            lambda x,y: x.drag((y[0], y[1]), (y[2], y[3]), y[4], y[5]),
+            lambda x,y,z: x.drag((y[0], y[1]), (y[2], y[3]), y[4], y[5]),
             x1, y1, x2, y2, duration, steps)
 
 def get_property(key):
     return _control_android(True,
-            lambda x,y: x.getProperty(y[0]),
+            lambda x,y,z: x.getProperty(y[0]),
             key)
 
 def get_system_property(key):
     return _control_android(True,
-            lambda x,y: x.getSystemProperty(y[0]),
+            lambda x,y,z: x.getSystemProperty(y[0]),
             key)
 
 def install_package(path):
-    _control_android(False, lambda x,y: x.installPackage(y[0]), path)
+    _control_android(False, lambda x,y,z: x.installPackage(y[0]), path)
 
 def press(type_, name):
     name = "KEYCODE_%s" % name
     type_ = eval("MonkeyDevice.%s" % type_)
-    _control_android(False, lambda x,y: x.press(y[0], y[1]), name, type_)
+    _control_android(False, lambda x,y,z: x.press(y[0], y[1]), name, type_)
 
 def reboot(bootload_type):
-    _control_android(False, lambda x,y: x.reboot(y[0]), bootload_type)
+    _control_android(False, lambda x,y,z: x.reboot(y[0]), bootload_type)
 
 def remove_package(package):
-    _control_android(False, lambda x,y: x.remove_package(y[0]), package)
+    _control_android(False, lambda x,y,z: x.remove_package(y[0]), package)
 
 def shell(*cmd):
     cmd = " ".join(cmd)
-    return _control_android(True, lambda x,y: x.shell(y[0]), cmd)
+    return _control_android(True, lambda x,y,z: x.shell(y[0]), cmd)
 
 def take_snapshot(path=None):
     if not path:
         now = time.localtime()
         path = "ash_snapshot_%04d-%02d-%02d-%02d-%02d-%02d" % (
                 now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec)
-    results = _control_android(True, lambda x,y: x.takeSnapshot())
+    results = _control_android(True, lambda x,y,z: x.takeSnapshot())
     for i in range(len(results)):
         result = results[i]
         result.writeToFile("%s_%d" % (path, i), "png")
 
-def touch(type_, x, y):
+def touch(type_, x, y, percentage=False):
+    if percentage == "False":
+        percentage = False
+    type_ = eval("MonkeyDevice.%s" % type_)
+    if percentage:
+        x = _convert_arg(x, float, None) / 100
+        y = _convert_arg(y, float, None) / 100
+        _control_android(False, lambda x,y,z: x.touch(
+                int(y[0] * z[0]), int(y[1] * z[1]), y[2]), x, y, type_)
+        return
     x = _convert_arg(x, int, None)
     y = _convert_arg(y, int, None)
-    type_ = eval("MonkeyDevice.%s" % type_)
-    _control_android(False, lambda x,y: x.touch(y[0], y[1], y[2]), x, y, type_)
+    _control_android(False, lambda x,y,z: x.touch(y[0], y[1], y[2]), x, y, type_)
 
-def show_cursor(x, y, pressed=False):
+def show_cursor(x, y, percentage=False, pressed=False):
+    if percentage == "False":
+        percentage = False
+    if percentage:
+        x = _convert_arg(x, float, None) / 100
+        y = _convert_arg(y, float, None) / 100
+    else:
+        x = _convert_arg(x, int, None)
+        y = _convert_arg(y, int, None)
+
     for device in _devices:
         if device[DEV_FOCUSED_INDX]:
-            query = "SHOW %d %d" % (int(x), int(y))
+            if percentage:
+                query = "SHOW %d %d" % (int(x * device[DEV_RESOL_INDX][0]),
+                        int(y * device[DEV_RESOL_INDX][1]))
+            else:
+                query = "SHOW %d %d" % (x, y)
             if pressed:
                 query += " pressed"
             length = "%03d" % len(query)
@@ -283,14 +322,14 @@ def hide_cursor():
                     device[DEV_CONN_INDX][1] = _connect_agi(device[1])
 
 def wake():
-    _control_android(False, lambda x,y: x.wake())
+    _control_android(False, lambda x,y,z: x.wake())
 
 def _control_pc(collect_result, expr):
     results = []
     for dev in _devices:
-        if dev[0] != TYPE_PC:
+        if dev[DEV_TYPE_INDX] != TYPE_PC:
             continue
-        if dev[4]:
+        if dev[DEV_FOCUSED_INDX]:
             sock = dev[DEV_CONN_INDX][0]
             sock.sendall(expr + ashmon.END_OF_MSG)
             tokens = ''
@@ -308,10 +347,19 @@ def _control_pc(collect_result, expr):
 
 # If target_me, control me.
 # If not, control connected devices.
-def move_mouse(x, y, target_me=False):
+def move_mouse(x, y, percentage=False, target_me=False):
     if not target_me:
-        return _control_pc(False, "move_mouse %s %s True" % (x, y))
-    #TODO: check bound value of x, type exception
+        return _control_pc(False, "move_mouse %s %s %s True" % (
+                x, y, percentage))
+    if percentage == "False":
+        percentage = False
+    if percentage:
+        x = _convert_arg(x, float, None) / 100 * _resolution[0]
+        y = _convert_arg(y, float, None) / 100 * _resolution[1]
+    else:
+        x = _convert_arg(x, int, None)
+        y = _convert_arg(y, int, None)
+
     robot.mouseMove(int(x), int(y))
 
 def press_mouse(right_button=False, target_me=False):
