@@ -97,9 +97,9 @@ def _get_and_process_user_input():
 
                 modglob._conn_to_ashmon = False
                 break
-            msg, tokens = ashmon.get_complete_message(
+            msgs, tokens = ashmon.get_complete_message(
                     received, tokens)
-            if msg:
+            for msg in msgs:
                 result = eval(msg)
                 break
     else:

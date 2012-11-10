@@ -338,8 +338,8 @@ def _control_pc(collect_result, expr):
                 if not received:
                     print "connection with devmgrmon crashed!"
                     sock.close()
-                msg, tokens = ashmon.get_complete_message(received, tokens)
-                if msg:
+                msgs, tokens = ashmon.get_complete_message(received, tokens)
+                for msg in msgs:
                     result = eval(msg)
                     break
     if collect_result:
@@ -426,8 +426,8 @@ class _ListenerThread(threading.Thread):
             if not received:
                 print "devmgr not received! stop listening!"
                 break
-            msg, tokens = ashmon.get_complete_message(received, tokens)
-            if msg:
+            msgs, tokens = ashmon.get_complete_message(received, tokens)
+            for msg in msgs:
                 result = ash.input(msg)
                 self.conn.sendall("%s%s" % (result, ashmon.END_OF_MSG))
         self.conn.close()

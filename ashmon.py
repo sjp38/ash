@@ -46,11 +46,11 @@ END_OF_MSG = 'end_of_expr'
 # combine tokens received from socket, get complete message peer sent.
 def get_complete_message(token, pre_tokens):
     pre_tokens += token
-    complete_msg = None
-    if END_OF_MSG in pre_tokens:
-        complete_msg = pre_tokens[:pre_tokens.find(END_OF_MSG)]
+    complete_msgs = []
+    while END_OF_MSG in pre_tokens:
+        complete_msgs.append(pre_tokens[:pre_tokens.find(END_OF_MSG)])
         pre_tokens = pre_tokens[pre_tokens.find(END_OF_MSG) + len(END_OF_MSG):]
-    return complete_msg, pre_tokens
+    return complete_msgs, pre_tokens
 
 class _ListenerThread(threading.Thread):
     def __init__(self, conn):
@@ -66,8 +66,8 @@ class _ListenerThread(threading.Thread):
             if not received:
                 print "not received! stop listening!"
                 break
-            msg, tokens = get_complete_message(received, tokens)
-            if msg:
+            msgs, tokens = get_complete_message(received, tokens)
+            for msg in msgs:
                 result = ash.input(msg)
                 self.conn.sendall("%s%s" % (result, END_OF_MSG))
         self.conn.close()
