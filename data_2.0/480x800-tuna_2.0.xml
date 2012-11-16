@@ -68,6 +68,8 @@
             <list>
                 <el>record</el>
                 <el>record_demo</el>
+                <el>show_cursor</el>
+                <el>hide_cursor</el>
             </list>
         </list>
     </callback>

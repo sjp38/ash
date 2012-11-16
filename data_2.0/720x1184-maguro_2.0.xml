@@ -1,5 +1,60 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <callbacks>
+
+    <callback>
+        <list>
+            <el>__default__</el>
+            <el>keyboard</el>
+            <el>Ctrl-R_DOWN</el>
+        </list>
+        <list>
+            <list>
+                <el>record</el>
+                <el>record_demo</el>
+                <el>show_cursor</el>
+                <el>hide_cursor</el>
+            </list>
+        </list>
+    </callback>
+    <callback>
+        <list>
+            <el>__default__</el>
+            <el>keyboard</el>
+            <el>Ctrl-D_DOWN</el>
+        </list>
+        <list>
+            <list>
+                <el>record_stop</el>
+            </list>
+        </list>
+    </callback>
+
+    <callback>
+        <list>
+            <el>__default__</el>
+            <el>keyboard</el>
+            <el>Ctrl-Z_DOWN</el>
+        </list>
+        <list>
+            <list>
+                <el>record_demo</el>
+            </list>
+        </list>
+    </callback>
+
+    <callback>
+        <list>
+            <el>__default__</el>
+            <el>keyboard</el>
+            <el>Ctrl-Q_DOWN</el>
+        </list>
+        <list>
+            <list>
+                <el>take_snapshot</el>
+            </list>
+        </list>
+    </callback>
+
     <callback>
         <list>
             <el>__default__</el>
