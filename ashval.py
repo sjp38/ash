@@ -49,8 +49,11 @@ _recording = False
 _record_queue = []
 _record_name = ""
 _last_record_time = 0
+_record_filter = []
 
-def record(record_name):
+# record events and make an alias stream.
+# param record_filter: command types should not record.
+def record(record_name, *record_filter):
     if not isinstance(record_name, str) or len(record_name) <= 0:
         now = time.localtime()
         record_name = "ash_record_%04d-%02d-%02d-%02d-%02d-%02d" % (
@@ -59,9 +62,11 @@ def record(record_name):
     global _record_queue
     global _record_name
     global _recording
+    global _record_filter
     _record_queue = []
     _record_name = record_name
     _recording = True
+    _record_filter = record_filter
 
 def record_stop(record_name=None):
     global _record_queue
@@ -145,7 +150,8 @@ def ashval(expr, is_raw = True):
             result = ashval(expr, False)
     else:
         result = code(*args)
-        if _recording and not expr[0] in RECORD_FILTER:
+        if (_recording and not expr[0] in RECORD_FILTER
+                and not expr[0] in _record_filter):
             global _last_record_time
             global _record_queue
             interval = time.time() - _last_record_time
