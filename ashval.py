@@ -10,7 +10,7 @@ import ashmon
 import data
 #TODO: Make monkey-dependant part unittest-able
 import devmgr
-import dui
+import ashdi
 
 RECORD_FILTER = ("arg", "record", "record_stop")
 
@@ -97,8 +97,8 @@ def sleep(time_):
             "Sleep fail! can't convert argument to float"
     time.sleep(time_)
 
-def start_dui():
-    dui.start_dui()
+def start_ashdi():
+    ashdi.start_ashdi()
 
 # Return ash function(list) or python function object.
 def _get_code(expr):
