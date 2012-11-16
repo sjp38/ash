@@ -19,7 +19,6 @@ import ashmon
 import ashval
 import modglob
 import log
-import manual
 
 TAG = "Ash"
 
@@ -79,7 +78,7 @@ def exec_script(file_path):
 def _get_and_process_user_input():
     user_input = _get_expression()
     if (user_input == ""):
-        print manual.CMDS
+        # TODO: print help message.
         return
     result = None
     if modglob._conn_to_ashmon:
