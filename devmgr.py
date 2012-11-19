@@ -109,7 +109,7 @@ def _connect_agi(id_):
         try:
             result = _do_connect_agi(id_)
         except Exception, e:
-            print "exception!!!"
+            #print "exception!!!"
             if i == _AGI_CONN_LIMIT:
                 # TODO Cleanup this device from device list.
                 print "Failed to connect AGI."
@@ -302,7 +302,7 @@ def show_cursor(x, y, percentage=False, pressed=False):
                 device[DEV_CONN_INDX][1].sendall(length)
                 device[DEV_CONN_INDX][1].sendall(query)
             except:
-                print "Fail to sen AGI query! connect again"
+                #print "Fail to send AGI query! connect again"
                 if device[DEV_CONN_INDX][1]:
                     device[DEV_CONN_INDX][1].close()
                     device[DEV_CONN_INDX][1] = _connect_agi(device[1])
@@ -316,7 +316,7 @@ def hide_cursor():
                 device[DEV_CONN_INDX][1].sendall(length)
                 device[DEV_CONN_INDX][1].sendall(query)
             except:
-                print "Fail to send AGI query! connect again"
+                #print "Fail to send AGI query! connect again"
                 if device[DEV_CONN_INDX][1]:
                     device[DEV_CONN_INDX][1].close()
                     device[DEV_CONN_INDX][1] = _connect_agi(device[1])
