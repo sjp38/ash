@@ -27,9 +27,11 @@ This ash implementation is for linux. You can get an **ash for Android(AshFa)** 
 
 AshFa just works, but, not complete as an ash. AshFa is just an example. You can make your ash for Android and publish it anywhere.
 
+# Demo video
+You can see demo video of ash from [Youtube](http://www.youtube.com/watch?gl=KR&hl=en&client=mv-google&v=XaA7UHmpJsU&t=0s&nomobile=1)
+
 # News
  - ash 2.0 have announced from [Google HackFair, Korea](http://googlekoreablog.blogspot.kr/2012/11/google-hackfair_6.html) and released by 19th, November 2012(EST).
-
  - Next minor version update will be done by few months.
 
 # License
