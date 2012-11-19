@@ -381,7 +381,7 @@ def release_mouse(right_button=False, target_me=False):
 def wheel_mouse(notches, target_me=False):
     if not target_me:
         return _control_pc(False, "wheel_mouse %s True" % notches)
-    robot.mouseWheel(int(notches))
+    robot.mouseWheel(int(eval(notches)))
 
 def press_key(keycode, target_me=False):
     if not target_me:
