@@ -1,178 +1,167 @@
-#!/usr/bin/env monkeyrunner
-# Moduel for data module test.
+#!/usr/bin/env python
 
-from data import *
+import unittest
 
-trigger_test = Trigger("modeA", "keyboard", "Ctrl-Shift-K")
-cmd_for_test = Command("press", ["DOWN", 100, 200]) 
-reference_for_test = Ref("referenceTestName", trigger_test, cmd_for_test)
+import data
 
-compare1 = Ref("command", Trigger("modeA", "key", "Shift-K_DOWN"), Command("type", ["abcd"]))
-compare2 = Ref("listWithSingleCommand", Trigger("modeB", "key", "Shift-K_DOWN"), [Command("touch", ["DOWN", 300, 400])])
-compare3 = Ref("listWithCmdAndList", Trigger("modeB", "key", "Ctrl-Shift-L_DOWN"), [Command("shell(ls -al)", []), [Command("drag", [100, 200, 150, 210])]])
-compare4 = Ref("refForRef", Trigger(DEFAULT_TRIGGER_MODE, "key", "D_UP"), Ref("command", None, None))
-compare5 = Ref("complicated", None, [Ref("listWithCmdAndList", None, None), Command("snapshot", ["abc.png"])])
+class TestData(unittest.TestCase):
+    def setUp(self):
+        print "test data start..."
 
-def testReference():
-    print "testReference!!"
-    print reference_for_test
-    print ""
+    def tearDown(self):
+        print "tear down..."
 
-def testTrigger():
-    print "testTrigger!!!"
-    trigger = Trigger("modeA", "keyboard", "Ctrl-Shift-K")
-    print trigger
-    print ""
+    def test_load_from_file(self):
+        data.load_from_file("data_2.0.xml")
+        self.assertEqual(
+                data.get_callback("googleKeyboard", "keyboard", "A_DOWN"),
+                ["touch", "DOWN_AND_UP", "300", "680"])
+        self.assertEqual(
+                data.get_callback("default", "alias", "click"),
+                [["touch", "DOWN", ["arg", "1"], ["arg", "2"]],
+                    ["sleep", "0.1"],
+                    ["touch", "UP", ["arg", "1"], ["arg", "2"]]
+                    ])
 
-def testLoad():
-    print "\ntestLoad!!!"
-    loadFrom("test_xmls/data_sample.xml")
+    def test_save_to_file(self):
+        data.clear()
+        data.load_from_file("data_2.0.xml")
+        data.save_to_file("data_2.0_write_test.xml")
+        data.clear()
+        data.load_from_file("data_2.0_write_test.xml")
+        self.assertEqual(
+                data.get_callback("googleKeyboard", "keyboard", "A_DOWN"),
+                ["touch", "DOWN_AND_UP", "300", "680"])
+        self.assertEqual(
+                data.get_callback("default", "alias", "click"),
+                [["touch", "DOWN", ["arg", "1"], ["arg", "2"]],
+                    ["sleep", "0.1"],
+                    ["touch", "UP", ["arg", "1"], ["arg", "2"]]
+                    ])
 
-    original = getRef(compare1.name)
-    print "compare\n ", compare1, "\nand\n", original, "\n"
-    if compare1.__str__() != original.__str__(): return True
+    def test_clear(self):
+        data.clear()
+        data.add_callback("foo", "bar", "bzrrr", ["a", "b", "c"])
+        self.assertEqual(data.get_callback("foo", "bar", "bzrrr"),
+                ["a", "b", "c"])
+        data.clear()
+        self.assertEqual(data.get_callback("foo", "bar", "bzrrr"),
+                data.NO_CALLBACK)
 
-    original = getRef(compare2.name)
-    print "compare\n ", compare2, "\nand\n", original, "\n"
-    if compare2.__str__() != original.__str__(): return True
+    def test_add_callback(self):
+        data.clear()
+        data.add_callback("abc", "def", "VALUE",
+                ["weird", "list", "grrr"])
+        self.assertEqual(data.get_callback("abc", "def", "VALUE"),
+                ["weird", "list", "grrr"])
+        data.add_callback("abc", "def", "VALUE",
+                ["normal", "new list", "varrr"])
+        self.assertEqual(data.get_callback("abc", "def", "VALUE"),
+                ["normal", "new list", "varrr"])
 
-    original = getRef(compare3.name)
-    print "compare\n", compare3, "\nand\n", original, "\n"
-    if compare3.__str__() != original.__str__(): return True
+        # Add None is equal to remove.
+        data.add_callback("abc", "def", "VALUE", None)
+        self.assertEqual(data.get_callback("abc", "def", "VALUE"),
+                data.NO_CALLBACK)
 
-    original = getRef(compare4.name)
-    print "compare\n  ", compare4, "\nand\n", original, "\n"
-    if compare4.__str__() != original.__str__(): return True
+        data.add_callback("", "abc", "def", [["code1", "arg1"],["code2"]])
+        self.assertEqual(data.get_callback(
+                data.DEFAULT_EVENT_MODE, "abc", "def"),
+                [["code1", "arg1"], ["code2"]])
+        data.add_callback("default", "abc", "def",
+                [["code1", "arg1"],["code2"]])
+        self.assertEqual(data.get_callback(
+                data.DEFAULT_EVENT_MODE, "abc", "def"),
+                [["code1", "arg1"], ["code2"]])
 
-    original = getRef(compare5.name)
-    print "compare\n ", compare5, "\nand\n", original, "\n"
-    if compare5.__str__() != original.__str__(): return True
+    def test_get_callback(self):
+        data.clear()
+        data.add_callback("googleKeyboard", "keyboard", "A_DOWN",
+                ["touch", "DOWN_AND_UP", "200", "400"])
+        self.assertEqual(
+                data.get_callback("googleKeyboard", "keyboard", "A_DOWN"),
+                ["touch", "DOWN_AND_UP", "200", "400"])
 
-def testSave():
-    print "\ntestSave!!!\n"
-    references.clear()
-    triggers.clear()
-    addReference(compare1)
-    addReference(compare2)
-    addReference(compare3)
-    addReference(compare4)
-    addReference(compare5)
-    bak = references.values()
-    bak.sort()
-    bak_triggers = triggers.values()
-    bak_triggers.sort()
-    saveTo("test_xmls/data_save_test.xml")
-    references.clear()
-    triggers.clear()
+        self.assertEqual(
+                data.get_callback("googleKeyboard", "keyboard", "no_key"),
+                data.NO_CALLBACK)
+        self.assertEqual(
+                data.get_callback("googleKeyboard", "no_type", "A_DOWN"),
+                data.NO_CALLBACK)
+        self.assertEqual(
+                data.get_callback("no_mode", "keyboard", "A_DOWN"),
+                data.NO_CALLBACK)
 
-    loadFrom("test_xmls/data_save_test.xml")
-    now = references.values()
-    now.sort()
-    now_triggers = triggers.values()
-    now_triggers.sort()
+        data.add_callback(data.DEFAULT_EVENT_MODE, "keyboard",
+                          "B_DOWN", ["a", ["c", "d"]])
+        self.assertEqual(
+                data.get_callback("", "keyboard", "B_DOWN"),
+                ["a", ["c", "d"]])
+        self.assertEqual(
+                data.get_callback("default", "keyboard", "B_DOWN"),
+                ["a", ["c", "d"]])
 
-    print "now : ", now, "\n"
-    for i in range(len(bak)):
-        print "compare\n%s\nand\n%s\n" % (bak[i], now[i])
-        if bak[i].__str__() != now[i].__str__():
-            return True
-    for i in range(len(bak_triggers)):
-        print "compare\n%s\nand\n%s\n" % (bak_triggers[i], now_triggers[i])
-        if bak_triggers[i].__str__() != now_triggers[i].__str__():
-            return True
+    def test_show(self):
+        data.clear()
+        data.add_callback("a", "b", "c", ["d", "e", "f", "g"])
+        data.add_callback("a", "c", "d", ["d", "e", "f", "g"])
+        data.add_callback("b", "c", "d", ["g", "h"])
+        data.add_callback("c", "d", "e", ["aaa", "bbb"])
+        data.add_callback("ab", "cd", "ef", ["foo"])
+        self.assertEqual(data.show(0), [["a", "ab", "b", "c"]])
+        self.assertEqual(data.show(1),
+                [["a",
+                    ["b", "c"],
+                 "ab",
+                    ["cd"],
+                 "b",
+                    ["c"],
+                 "c",
+                    ["d"]
+                    ]])
+        self.assertEqual(data.show(2),
+                [["a",
+                    ["b", ["c"],
+                     "c", ["d"]],
+                 "ab",
+                    ["cd", ["ef"]],
+                 "b",
+                    ["c", ["d"]],
+                 "c",
+                    ["d", ["e"]]
+                    ]])
+        self.assertEqual(data.show(3),
+                [["a",
+                    ["b",
+                        ["c",
+                            ["d", "e", "f", "g"]],
+                     "c",
+                        ["d",
+                            ["d", "e", "f", "g"]]],
+                 "ab",
+                    ["cd",
+                        ["ef",
+                            ["foo"]]],
+                 "b",
+                    ["c",
+                        ["d",
+                            ["g", "h"]]],
+                 "c",
+                    ["d",
+                        ["e",
+                            ["aaa", "bbb"]]]
+                    ]])
 
-def testAddReference():
-    print "testAddReference!!!"
-    references.clear()
-    triggers.clear()
-    trigger = Trigger("triggerTestMode", "type", "value")
-    ref = Ref("test", trigger, Command("shell(ls -al)", []))
-    addReference(ref)
-    if not addReference(ref):
-        print "No warning although add same reference twice!"
-        return True
-    ref2 = Ref("test2", trigger, Command("touch", ["DOWN", "100", "100"]))
-    if not addReference(ref2):
-        print "No warning although add same trigger twice!"
-        return True
+    def test_set_mode(self):
+        data.clear()
+        data.set_mode("abcd")
+        self.assertEqual(data._current_event_mode, "abcd")
 
-    searched = triggers[trigger.mode][trigger.key].trigger
-    if searched.__str__() != trigger.__str__():
-        print "trigger not registered!"
-        print "compared\n%s\n%s\n" % (searched, trigger)
-        return True
-    return False
+        data.set_mode(None)
+        self.assertEqual(data.get_mode(), "abcd")
 
-def testRemoveReference():
-    print "testRemoveReference!!!"
-    references.clear()
-    triggers.clear()
-
-    if not removeReference("test"):
-        print "No warning although removed not registered reference!"
-        return True
-
-    addReference(reference_for_test)
-    removeReference(reference_for_test.name)
-    if len(references) > 0:
-        print "reference not removed!!!"
-        return True
-
-def testSetTrigger():
-    print "testSetTrigger!!!"
-    references.clear()
-    triggers.clear()
-
-    if not setTrigger(reference_for_test, trigger_test):
-        print "No warning although set trigger to unexist reference!"
-        return True
-    addReference(reference_for_test)
-    trigger2 = Trigger("modeB", "typeTest", "valueTest")
-    setTrigger(reference_for_test, trigger2)
-    if len(triggers[reference_for_test.trigger.mode]) > 0:
-        print "Old trigger not deleted!"
-        return True
-    nowTrigger = triggers["modeB"][trigger2.key].trigger
-    if nowTrigger.__str__() != trigger2.__str__():
-        print "Trigger not set correctly!"
-        print "compared\n%s\n%s" % (nowTrigger, trigger2)
-        return True
-
-    reference_for_test.name = "abcd"
-    if triggers[trigger2.mode][trigger2.key].name == reference_for_test.name:
-        print "No copy protection for reference!"
-        return True
-
-    trigger2.trig_type = "copyTest"
-    if triggers[trigger2.mode][trigger2.key].trigger.trig_type == trigger2.trig_type:
-        print "No copy protection for trigger!"
-        return True
-
-def testGetRef():
-    references.clear()
-    triggers.clear()
-
-    addReference(reference_for_test)
-    get = getRef(reference_for_test.name)
-    get.name = "testGetRef"
-    get2 = getRef(reference_for_test.name)
-    if get.name == get2.name:
-        print "No copy protection for reference!"
-        return True
-
-
-def testModule():
-    if testTrigger(): return True
-    if testReference(): return True
-    if testLoad(): return True
-    if testSave(): return True
-    if testAddReference(): return True
-    if testRemoveReference(): return True
-    if testSetTrigger(): return True
-    if testGetRef(): return True
-
-if __name__ == "__main__":
-    if testModule():
-        print "Data test FAIL!!!"
-    else:
-        print "Data test success!!!"
+    def test_get_mode(self):
+        data.clear()
+        self.assertEqual(data.get_mode(), data.DEFAULT_EVENT_MODE)
+        data._current_event_mode = "grrr"
+        self.assertEqual(data.get_mode(), "grrr")

@@ -1,5 +1,0 @@
-load default_data/720x1184-galaxyNexus/data.xml
-connectDevice
-switchTriggerMode googleKeyboard
-startGui default_data/gui_keylayout.xml
-startGuiAutoRefresh

@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<callbacks>
+    <callback>
+        <!-- mode / type / value -->
+        <list>
+            <el>googleKeyboard</el>
+            <el>keyboard</el>
+            <el>A_DOWN</el>
+        </list>
+        <!-- code -->
+        <list>
+            <el>touch</el>
+            <el>DOWN_AND_UP</el>
+            <el>300</el> <!-- Maybe percentage is better? -->
+            <el>680</el>
+        </list>
+    </callback>
+
+    <callback>
+        <list>
+            <el>default</el>
+            <el>alias</el>
+            <el>click</el>
+        </list>
+        <list>
+            <list>
+                <el>touch</el>
+                <el>DOWN</el>
+                <list>
+                    <el>arg</el>
+                    <el>1</el>
+                </list>
+                <list>
+                    <el>arg</el>
+                    <el>2</el>
+                </list>
+            </list>
+
+            <list>
+                <el>sleep</el>
+                <el>0.1</el>
+            </list>
+
+            <list>
+                <el>touch</el>
+                <el>UP</el>
+                <list>
+                    <el>arg</el>
+                    <el>1</el>
+                </list>
+                <list>
+                    <el>arg</el>
+                    <el>2</el>
+                </list>
+            </list>
+        </list>
+    </callback>
+</callbacks>
