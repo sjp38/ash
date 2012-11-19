@@ -20,10 +20,10 @@ It's just an _user interface_.
 Anybody can make their interface for ash conveniently.
 Or, You can make _application_ based on ash's language, too. Just use ash as device control facility.
 
-ashdi and [AshFa](https://github.com/sjp38/AshFa)'s PC control feature is one good example for ash interface layer application.
+ashdi and [AshFa](https://play.google.com/store/apps/details?id=org.drykiss.android.app.ashfa&feature=search_result#?t=W251bGwsMSwxLDEsIm9yZy5kcnlraXNzLmFuZHJvaWQuYXBwLmFzaGZhIl0.)'s PC control feature is one good example for ash interface layer application.
 
 Anybody can implement ash using any language, any platform, if and only if they support ash language syntax and basic operations properly.
-This ash implementation is for linux. You can get an **ash for Android(AshFa)** from [Here](https://github.com/sjp38/AshFa).
+This ash implementation is for linux. You can get an **ash for Android(AshFa)** from [Here](https://play.google.com/store/apps/details?id=org.drykiss.android.app.ashfa&feature=search_result#?t=W251bGwsMSwxLDEsIm9yZy5kcnlraXNzLmFuZHJvaWQuYXBwLmFzaGZhIl0.).
 
 AshFa just works, but, not complete as an ash. AshFa is just an example. You can make your ash for Android and publish it anywhere.
 
@@ -51,7 +51,7 @@ If you are expert,
 
 `$ ./ash.py`
 
-If you have _Galaxy Nexus_ and want to control it from PC, install [_AshFa_](https://github.com/sjp38/AshFa) to your _Galaxy Nexus_ and start it. then,
+If you have _Galaxy Nexus_ and want to control it from PC, install [_AshFa_](https://play.google.com/store/apps/details?id=org.drykiss.android.app.ashfa&feature=search_result#?t=W251bGwsMSwxLDEsIm9yZy5kcnlraXNzLmFuZHJvaWQuYXBwLmFzaGZhIl0.) to your _Galaxy Nexus_ and start it. then,
 
 `$ ./ash.py init_di_maguro.ash`
 
