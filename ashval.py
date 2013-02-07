@@ -35,10 +35,8 @@ def _raw_ashval(expr):
         raw_py_expr += elem
         last_elem = elem
     raw_py_expr = raw_py_expr[2:]
-    list = eval(raw_py_expr)
-    # TODO remove below print.
-    #print list
-    return list
+    list_ = eval(raw_py_expr)
+    return list_
 
 def arg(number):
     if not isinstance(number, int):
