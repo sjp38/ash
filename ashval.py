@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-# ash evaluator.
+
+"""ash evaluator."""
+
+__author__ = "SeongJae Park"
+__email__ = "sj38.park@gmail.com"
+__copyright__ = "Copyright (c) 2011-2013, SeongJae Park"
+__license__ = "GPLv3"
 
 import copy
 import sys

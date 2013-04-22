@@ -1,8 +1,12 @@
 #!/usr/bin/env monkeyrunner
 #!/usr/bin/env python
-# Main entry point of Ash. Run with CLI.
-# Author : SeongJae Park <sj38.park@gmail.com>
-# License : GPL v3
+
+"""Main entry point of Ash. Run with CLI."""
+
+__author__ = "SeongJae Park"
+__email__ = "sj38.park@gmail.com"
+__copyright__ = "Copyright (c) 2011-2013, SeongJae Park"
+__license__ = "GPLv3"
 
 #from java.lang import System
 

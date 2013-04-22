@@ -1,8 +1,12 @@
 #!/usr/bin/env monkeyrunner
-# Module for direct ui(use keyboard/mouse as input, device screen as screen)
-# Just one example application.
-#
-# Author : SeongJae Park <sj38.park@gmail.com>
+
+"""Module for direct ui(use keyboard/mouse as input, device screen as screen).
+Just one example application."""
+
+__author__ = "SeongJae Park"
+__email__ = "sj38.park@gmail.com"
+__copyright__ = "Copyright (c) 2011-2013, SeongJae Park"
+__license__ = "GPLv3"
 
 import os
 import sys

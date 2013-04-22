@@ -1,8 +1,11 @@
 #!/usr/bin/env python
-# Module for data.
-# Author : SeongJae Park <sj38.park@gmail.com>
-# Licensed under the terms of the GNU GPL License version 3
 
+"""Module for data."""
+
+__author__ = "SeongJae Park"
+__email__ = "sj38.park@gmail.com"
+__copyright__ = "Copyright (c) 2011-2013, SeongJae Park"
+__license__ = "GPLv3"
 
 from xml.etree.ElementTree import Element, fromstring, tostring
 import copy

@@ -1,9 +1,13 @@
 #!/usr/bin/env monkeyrunner
-# Devices manager.
-# Manage devices connection and devices control.
-# Provide devices connection PnP feature, too.
-# Author : SeongJae Park <sj38.park@gmail.com>
-# License : GPLv3
+
+"""Devices manager.
+Manage devices connection and devices control.
+Provide devices connection PnP feature, too."""
+
+__author__ = "SeongJae Park"
+__email__ = "sj38.park@gmail.com"
+__copyright__ = "Copyright (c) 2011-2013, SeongJae Park"
+__license__ = "GPLv3"
 
 import os
 import socket

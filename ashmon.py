@@ -1,8 +1,12 @@
 #!/usr/bin/env python
-# ash connection management.
-# ash can run as daemon, establish connection.
-# Author : SeongJae Park <sj38.park@gmail.com>
-# License : GPL v3
+
+"""ash connection management.
+ash can run as daemon, establish connection."""
+
+__author__ = "SeongJae Park"
+__email__ = "sj38.park@gmail.com"
+__copyright__ = "Copyright (c) 2011-2013, SeongJae Park"
+__license__ = "GPLv3"
 
 import socket
 import threading
