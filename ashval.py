@@ -21,28 +21,32 @@ import ashdi
 RECORD_FILTER = ("arg", "record", "record_stop")
 
 # Make raw expression(python string) to list(python list with strings)
-def _raw_ashval(expr):
-    if not expr.startswith('['):
-        expr = '[' + expr + ']'
-    splitted = expr.split()
-    raw_py_expr = ""
-    last_elem = " "
-    for elem in splitted:
-        last_list_start = elem.rfind('[')
-        last_list_end = elem.find(']')
-        if last_list_end == -1:
-            last_list_end = len(elem)
-        content = elem[last_list_start+1:last_list_end]
-        if content != "":
-            elem = "%s'%s'%s" % (elem[0:last_list_start+1],
-                content, elem[last_list_end:])
-        if not last_elem[-1] in ["[", "]"] or last_elem[-1] != elem[0]:
-            elem = ", " + elem
-        raw_py_expr += elem
-        last_elem = elem
-    raw_py_expr = raw_py_expr[2:]
-    list_ = eval(raw_py_expr)
-    return list_
+def _raw_ashval(expr, depth = 1):
+    if not expr.startswith("[") and depth == 1:
+        expr = "[" + expr + "]"
+    list_ = []
+    atom = ""
+    i = 0
+    while i < len(expr):
+        c = expr[i]
+        if c == "[":
+            sublist, sublen = _raw_ashval(expr[i + 1:], depth + 1)
+            i = i + sublen
+            if depth == 1:
+                return sublist
+            list_.append(sublist)
+        elif c == "]":
+            if atom != "":
+                list_.append(atom)
+                atom = ""
+            return list_, i + 1
+        elif c == " ":
+            if atom != "":
+                list_.append(atom)
+            atom = ""
+        else:
+            atom = atom + c
+        i = i + 1
 
 def arg(number):
     if not isinstance(number, int):
