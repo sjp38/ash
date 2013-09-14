@@ -284,6 +284,18 @@ def touch(type_, x, y, percentage=False):
     y = _convert_arg(y, int, None)
     _control_android(False, lambda x,y,z: x.touch(y[0], y[1], y[2]), x, y, type_)
 
+def _ask_ashfa(device, cmd, length=0):
+    if length == 0:
+        length = "%03d" % len(cmd)
+    try:
+        device[DEV_CONN_INDX][1].sendall(length)
+        device[DEV_CONN_INDX][1].sendall(cmd)
+    except:
+        #print "Fail to send AGI query! connect again"
+        if device[DEV_CONN_INDX][1]:
+            device[DEV_CONN_INDX][1].close()
+            device[DEV_CONN_INDX][1] = _connect_agi(device[1])
+
 def show_cursor(x, y, percentage=False, pressed=False):
     if percentage == "False":
         percentage = False
@@ -304,28 +316,14 @@ def show_cursor(x, y, percentage=False, pressed=False):
             if pressed:
                 query += " pressed"
             length = "%03d" % len(query)
-            try:
-                device[DEV_CONN_INDX][1].sendall(length)
-                device[DEV_CONN_INDX][1].sendall(query)
-            except:
-                #print "Fail to send AGI query! connect again"
-                if device[DEV_CONN_INDX][1]:
-                    device[DEV_CONN_INDX][1].close()
-                    device[DEV_CONN_INDX][1] = _connect_agi(device[1])
+            _ask_ashfa(device, query, length)
 
 def hide_cursor():
     for device in _devices:
         if device[DEV_FOCUSED_INDX]:
             query = "HIDE"
             length = "%03d" % len(query)
-            try:
-                device[DEV_CONN_INDX][1].sendall(length)
-                device[DEV_CONN_INDX][1].sendall(query)
-            except:
-                #print "Fail to send AGI query! connect again"
-                if device[DEV_CONN_INDX][1]:
-                    device[DEV_CONN_INDX][1].close()
-                    device[DEV_CONN_INDX][1] = _connect_agi(device[1])
+            _ask_ashfa(device, query, length)
 
 def wake():
     _control_android(False, lambda x,y,z: x.wake())
