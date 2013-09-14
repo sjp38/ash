@@ -56,10 +56,8 @@ If you have _Galaxy Nexus_ and want to control it from PC, install [_AshFa_](htt
 `$ ./ash.py init_di_maguro.ash`
 
 
-# Version
-2.0.0.0
-
-2.0 is still *not stable*. But, better than 1.0
+# Note
+Current version is still *not stable*.
 
 # Author
 SeongJae Park (sj38.park@gmail.com)
