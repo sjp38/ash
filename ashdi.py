@@ -59,6 +59,8 @@ devicesList = None
 devicesPanel = None
 keyboardPanel = None
 
+support_move = False
+
 def start_ashdi():
     loadKeyLayout("data_2.0/ashdi_keylayout.xml")
 
@@ -71,6 +73,7 @@ def start_ashdi():
     frame.addWindowFocusListener(GuiWindowFocusListener())
     start_android_waker()
     handleConnectedDevBtn(True)
+    check_move_support()
 
 def stop():
     _stop_android_waker()
@@ -293,6 +296,14 @@ def handleTerminalInput(event):
     if result:
         notifyResult(result)
 
+def check_move_support():
+    global support_move
+    support_move = True
+    try:
+        ashval.ashval("touch MOVE 1 1 1")
+    except AttributeError:
+        support_move = False
+
 def notifyResult(results, depth=0):
     if results.__class__ == list:
         for result in results:
@@ -377,9 +388,11 @@ class ScrMouseListener(MouseInputAdapter):
         x = event.getX() * 100.0 / event.getComponent().getWidth()
         y = event.getY() * 100.0 / event.getComponent().getHeight()
 
+        if support_move:
+            ashval.ashval("touch MOVE %d %d 1" % (x,y))
         ashval.ashval("show_cursor %d %d 1 pressed" % (x,y))
-        self.dragging = True
-
+        if not support_move:
+            self.dragging = True
 
     def mouseMoved(self, event):
         x = event.getX() * 100.0 / event.getComponent().getWidth()
