@@ -244,6 +244,7 @@ def install_package(path):
     _control_android(False, lambda x,y,z: x.installPackage(y[0]), path)
 
 def press(type_, name):
+    """Press down or up a button or key"""
     name = "KEYCODE_%s" % name
     type_ = eval("MonkeyDevice.%s" % type_)
     _control_android(False, lambda x,y,z: x.press(y[0], y[1]), name, type_)
@@ -269,6 +270,7 @@ def take_snapshot(path=None):
         result.writeToFile("%s_%d" % (path, i), "png")
 
 def touch(type_, x, y, percentage=False):
+    """Lay down or up or move finger on screen"""
     if percentage == "False":
         percentage = False
     type_ = eval("MonkeyDevice.%s" % type_)
