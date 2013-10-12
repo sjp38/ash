@@ -14,12 +14,7 @@ import socket
 import threading
 import time
 
-from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice, MonkeyImage
-from java.awt import Robot, Toolkit
-from java.awt.event import InputEvent, KeyEvent
-
 import ash
-import ashmon
 
 TYPE_ANDROID = "android"
 TYPE_PC = "pc"
@@ -54,16 +49,12 @@ DEV_RESOL_INDX = 5
 _devices = []
 _stop_device_lookup_thread = False
 
-robot = Robot()
 _stop_accepting = False
 _stop_listening = False
 waiter_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 waiter_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 waiter_sock.bind(('', _DEVMGR_PORT))
 waiter_sock.listen(1)
-
-dimension = Toolkit.getDefaultToolkit().getScreenSize()
-_resolution = [dimension.width, dimension.height]
 
 OFFICIAL_AGAIN_BY_VERSION3 = """
 Hidden feature
@@ -381,13 +372,11 @@ def move_mouse(x, y, percentage=False, target_me=False):
     if percentage == "False":
         percentage = False
     if percentage:
-        x = _convert_arg(x, float, None) / 100 * _resolution[0]
-        y = _convert_arg(y, float, None) / 100 * _resolution[1]
+        # convert percentage to actual value in pixel
+        pass
     else:
         x = _convert_arg(x, int, None)
         y = _convert_arg(y, int, None)
-
-    robot.mouseMove(int(x), int(y))
 
 def press_mouse(right_button=False, target_me=False):
     return OFFICIAL_AGAIN_BY_VERSION3
@@ -396,7 +385,6 @@ def press_mouse(right_button=False, target_me=False):
     button = InputEvent.BUTTON1_MASK
     if eval(right_button):
         button = InputEvent.BUTTON3_MASK
-    robot.mousePress(button)
 
 def release_mouse(right_button=False, target_me=False):
     return OFFICIAL_AGAIN_BY_VERSION3
@@ -405,25 +393,21 @@ def release_mouse(right_button=False, target_me=False):
     button = InputEvent.BUTTON1_MASK
     if eval(right_button):
         button = InputEvent.BUTTON3_MASK
-    robot.mouseRelease(button)
 
 def wheel_mouse(notches, target_me=False):
     return OFFICIAL_AGAIN_BY_VERSION3
     if not target_me:
         return _control_pc(False, "wheel_mouse %s True" % notches)
-    robot.mouseWheel(int(eval(notches)))
 
 def press_key(keycode, target_me=False):
     return OFFICIAL_AGAIN_BY_VERSION3
     if not target_me:
         return _control_pc(False, "press_key %s True" % keycode)
-    robot.keyPress(eval("KeyEvent.VK_%s" % keycode))
 
 def release_key(keycode, target_me=False):
     return OFFICIAL_AGAIN_BY_VERSION3
     if not target_me:
         return _control_pc(False, "release_key %s True" % keycode)
-    robot.keyRelease(eval("KeyEvent.VK_%s" % keycode))
 
 def start_devmgrmon():
     return OFFICIAL_AGAIN_BY_VERSION3
