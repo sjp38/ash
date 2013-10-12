@@ -21,15 +21,9 @@ import sys
 
 import ashmon
 import ashval
-import modglob
 import log
 
 TAG = "Ash"
-
-# Make variables global between modules.
-modglob._conn_to_ashmon = False
-modglob.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-modglob.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 def print_result(result, depth=0):
     if result.__class__ == list:
@@ -46,14 +40,6 @@ def _get_expression():
         user_expr = user_expr[0:-1]
         user_expr += raw_input("   ")
     return user_expr
-
-def connect_ashmon(address):
-    modglob.sock.connect((address, ashmon.ASH_CONN_PORT))
-    print "connected!"
-    modglob._conn_to_ashmon = True
-
-def disconnect_ashmon():
-    modglob._conn_to_ashmon = False
 
 # Let's do ashval using only this.
 def input(expr):
@@ -84,29 +70,7 @@ def _get_and_process_user_input():
     if (user_input == ""):
         # TODO: print help message.
         return
-    result = None
-    if modglob._conn_to_ashmon:
-        modglob.sock.sendall(user_input + ashmon.END_OF_MSG)
-        tokens = ''
-        while True:
-            received = modglob.sock.recv(1024)
-            if not received or not modglob._conn_to_ashmon:
-                print "connection crashed!"
-                modglob.sock.close()
-                modglob.sock = socket.socket(
-                        socket.AF_INET, socket.SOCK_STREAM)
-                modglob.sock.setsockopt(
-                        socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
-                modglob._conn_to_ashmon = False
-                break
-            msgs, tokens = ashmon.get_complete_message(
-                    received, tokens)
-            for msg in msgs:
-                result = eval(msg)
-                break
-    else:
-        result = ashval.ashval(user_input)
+    result = ashval.ashval(user_input)
 
     if result: print_result(result)
 

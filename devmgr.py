@@ -14,12 +14,77 @@ import socket
 import threading
 import time
 
-from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice, MonkeyImage
-from java.awt import Robot, Toolkit
-from java.awt.event import InputEvent, KeyEvent
-
 import ash
-import ashmon
+
+class _Device:
+    """
+Abstract class for device
+    Concrete device may be Android device or PC or any other device.
+
+Field
+    type_: type of device
+        e.g., "android", "pc"
+    addr: tuple for address of device in form of (<value> <address type>).
+        e.g., ("10.0.0.1", "ip"), ("+82-10-1234-4567", "phone number")
+    name: name of device.
+        e.g., "Desktop of James", "tuna"
+    ashconn: connection to ash on device
+        It can be tcp/ip or bluetooth or anything.
+        But, should able to use duck typing using read / write.
+    focused: whether this device is focused
+    resolution: screen resolution of this device
+    """
+
+    def __init__(self, type_, address, name, conn, focused, resolution):
+        self.type_ = type_
+        self.addr = address
+        self.name = name
+        self.ashconn = conn
+        self.focused = focused
+        self.resolution = resolution
+
+    def __str__(self):
+        return """
+[Device
+    type: %s,
+    address: %s,
+    name: %s,
+    ashconn: %s,
+    focused: %s,
+    resolution: %s]
+""" %  (self.type_, self.addr, self.name, self.ashconn,
+        self.focused, self.resolution)
+
+    def __repr__(self):
+        return self.__str__()
+
+    def get_property(key):
+        pass
+
+    def shutdown(operation, delay):
+        pass
+
+    def shell(*cmd):
+        pass
+
+    def take_snapshot(path=None):
+        pass
+
+    def remove_package(package):
+        "Android specific feature"
+        pass
+
+    def unlock_screen():
+        pass
+
+    def mouse(type_, x, y, percentage=False):
+        pass
+
+    def whell(notches):
+        pass
+
+    def press_key(type_, keycode):
+        pass
 
 TYPE_ANDROID = "android"
 TYPE_PC = "pc"
@@ -54,7 +119,6 @@ DEV_RESOL_INDX = 5
 _devices = []
 _stop_device_lookup_thread = False
 
-robot = Robot()
 _stop_accepting = False
 _stop_listening = False
 waiter_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -62,10 +126,13 @@ waiter_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 waiter_sock.bind(('', _DEVMGR_PORT))
 waiter_sock.listen(1)
 
-dimension = Toolkit.getDefaultToolkit().getScreenSize()
-_resolution = [dimension.width, dimension.height]
+OFFICIAL_AGAIN_BY_VERSION3 = """
+Hidden feature
+
+Will be publicated again or deprecated officially by v3.0"""
 
 def devices():
+    return OFFICIAL_AGAIN_BY_VERSION3
     f = os.popen("adb devices")
     results = f.readlines()
     f.close()
@@ -81,6 +148,7 @@ def devices():
     return parsed
 
 def connected_devices(develop_view=None):
+    return OFFICIAL_AGAIN_BY_VERSION3
     results = []
     for device in _devices:
         if develop_view:
@@ -167,6 +235,7 @@ def _connect_devmgr(devid, type_):
 
 # if type_ is none, id_ is just index from devices list.
 def connect(id_, type_=None):
+    return OFFICIAL_AGAIN_BY_VERSION3
     if not type_:
         devices_ = devices()
         nth = _convert_arg(id_, int, (0, len(devices_) - 1))
@@ -182,6 +251,7 @@ def connect(id_, type_=None):
 
 # focus with no argument is same as clear focus.
 def focus(*nths):
+    return OFFICIAL_AGAIN_BY_VERSION3
     will_focuses = []
     for nth in nths:
         nth = _convert_arg(nth, int, (0, len(_devices) - 1))
@@ -206,6 +276,7 @@ def _control_android(collect_result, lambda_, *args):
         return results
 
 def drag(x1, y1, x2, y2, percentage=False, duration=0.1, steps=10):
+    return OFFICIAL_AGAIN_BY_VERSION3
     if percentage == "False":
         percentage = False
     if percentage:
@@ -231,35 +302,43 @@ def drag(x1, y1, x2, y2, percentage=False, duration=0.1, steps=10):
             x1, y1, x2, y2, duration, steps)
 
 def get_property(key):
+    return OFFICIAL_AGAIN_BY_VERSION3
     return _control_android(True,
             lambda x,y,z: x.getProperty(y[0]),
             key)
 
 def get_system_property(key):
+    return OFFICIAL_AGAIN_BY_VERSION3
     return _control_android(True,
             lambda x,y,z: x.getSystemProperty(y[0]),
             key)
 
 def install_package(path):
+    return OFFICIAL_AGAIN_BY_VERSION3
     _control_android(False, lambda x,y,z: x.installPackage(y[0]), path)
 
 def press(type_, name):
     """Press down or up a button or key"""
+    return OFFICIAL_AGAIN_BY_VERSION3
     name = "KEYCODE_%s" % name
     type_ = eval("MonkeyDevice.%s" % type_)
     _control_android(False, lambda x,y,z: x.press(y[0], y[1]), name, type_)
 
 def reboot(bootload_type):
+    return OFFICIAL_AGAIN_BY_VERSION3
     _control_android(False, lambda x,y,z: x.reboot(y[0]), bootload_type)
 
 def remove_package(package):
+    return OFFICIAL_AGAIN_BY_VERSION3
     _control_android(False, lambda x,y,z: x.remove_package(y[0]), package)
 
 def shell(*cmd):
+    return OFFICIAL_AGAIN_BY_VERSION3
     cmd = " ".join(cmd)
     return _control_android(True, lambda x,y,z: x.shell(y[0]), cmd)
 
 def take_snapshot(path=None):
+    return OFFICIAL_AGAIN_BY_VERSION3
     if not path:
         now = time.localtime()
         path = "ash_snapshot_%04d-%02d-%02d-%02d-%02d-%02d" % (
@@ -271,6 +350,7 @@ def take_snapshot(path=None):
 
 def touch(type_, x, y, percentage=False):
     """Lay down or up or move finger on screen"""
+    return OFFICIAL_AGAIN_BY_VERSION3
     if percentage == "False":
         percentage = False
     type_ = eval("MonkeyDevice.%s" % type_)
@@ -297,6 +377,7 @@ def _ask_ashfa(device, cmd, length=0):
             device[DEV_CONN_INDX][1] = _connect_agi(device[1])
 
 def show_cursor(x, y, percentage=False, pressed=False):
+    return OFFICIAL_AGAIN_BY_VERSION3
     if percentage == "False":
         percentage = False
     if percentage:
@@ -319,6 +400,7 @@ def show_cursor(x, y, percentage=False, pressed=False):
             _ask_ashfa(device, query, length)
 
 def hide_cursor():
+    return OFFICIAL_AGAIN_BY_VERSION3
     for device in _devices:
         if device[DEV_FOCUSED_INDX]:
             query = "HIDE"
@@ -326,6 +408,7 @@ def hide_cursor():
             _ask_ashfa(device, query, length)
 
 def wake():
+    return OFFICIAL_AGAIN_BY_VERSION3
     _control_android(False, lambda x,y,z: x.wake())
 
 def _control_pc(collect_result, expr):
@@ -352,52 +435,52 @@ def _control_pc(collect_result, expr):
 # If target_me, control me.
 # If not, control connected devices.
 def move_mouse(x, y, percentage=False, target_me=False):
+    return OFFICIAL_AGAIN_BY_VERSION3
     if not target_me:
         return _control_pc(False, "move_mouse %s %s %s True" % (
                 x, y, percentage))
     if percentage == "False":
         percentage = False
     if percentage:
-        x = _convert_arg(x, float, None) / 100 * _resolution[0]
-        y = _convert_arg(y, float, None) / 100 * _resolution[1]
+        # convert percentage to actual value in pixel
+        pass
     else:
         x = _convert_arg(x, int, None)
         y = _convert_arg(y, int, None)
 
-    robot.mouseMove(int(x), int(y))
-
 def press_mouse(right_button=False, target_me=False):
+    return OFFICIAL_AGAIN_BY_VERSION3
     if not target_me:
         return _control_pc(False, "press_mouse %s True" % (right_button))
     button = InputEvent.BUTTON1_MASK
     if eval(right_button):
         button = InputEvent.BUTTON3_MASK
-    robot.mousePress(button)
 
 def release_mouse(right_button=False, target_me=False):
+    return OFFICIAL_AGAIN_BY_VERSION3
     if not target_me:
         return _control_pc(False, "release_mouse %s True" % (right_button))
     button = InputEvent.BUTTON1_MASK
     if eval(right_button):
         button = InputEvent.BUTTON3_MASK
-    robot.mouseRelease(button)
 
 def wheel_mouse(notches, target_me=False):
+    return OFFICIAL_AGAIN_BY_VERSION3
     if not target_me:
         return _control_pc(False, "wheel_mouse %s True" % notches)
-    robot.mouseWheel(int(eval(notches)))
 
 def press_key(keycode, target_me=False):
+    return OFFICIAL_AGAIN_BY_VERSION3
     if not target_me:
         return _control_pc(False, "press_key %s True" % keycode)
-    robot.keyPress(eval("KeyEvent.VK_%s" % keycode))
 
 def release_key(keycode, target_me=False):
+    return OFFICIAL_AGAIN_BY_VERSION3
     if not target_me:
         return _control_pc(False, "release_key %s True" % keycode)
-    robot.keyRelease(eval("KeyEvent.VK_%s" % keycode))
 
 def start_devmgrmon():
+    return OFFICIAL_AGAIN_BY_VERSION3
     _stop_listening = False
     _stop_accepting = False
     acceptor = _AcceptorThread()
