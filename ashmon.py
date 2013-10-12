@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-"""ash connection management.
-ash can run as daemon, establish connection."""
+"""ash connection management
+ash system is actually just a network between ashes."""
 
 __author__ = "SeongJae Park"
 __email__ = "sj38.park@gmail.com"
