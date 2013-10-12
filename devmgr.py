@@ -16,6 +16,76 @@ import time
 
 import ash
 
+class _Device:
+    """
+Abstract class for device
+    Concrete device may be Android device or PC or any other device.
+
+Field
+    type_: type of device
+        e.g., "android", "pc"
+    addr: tuple for address of device in form of (<value> <address type>).
+        e.g., ("10.0.0.1", "ip"), ("+82-10-1234-4567", "phone number")
+    name: name of device.
+        e.g., "Desktop of James", "tuna"
+    ashconn: connection to ash on device
+        It can be tcp/ip or bluetooth or anything.
+        But, should able to use duck typing using read / write.
+    focused: whether this device is focused
+    resolution: screen resolution of this device
+    """
+
+    def __init__(self, type_, address, name, conn, focused, resolution):
+        self.type_ = type_
+        self.addr = address
+        self.name = name
+        self.ashconn = conn
+        self.focused = focused
+        self.resolution = resolution
+
+    def __str__(self):
+        return """
+[Device
+    type: %s,
+    address: %s,
+    name: %s,
+    ashconn: %s,
+    focused: %s,
+    resolution: %s]
+""" %  (self.type_, self.addr, self.name, self.ashconn,
+        self.focused, self.resolution)
+
+    def __repr__(self):
+        return self.__str__()
+
+    def get_property(key):
+        pass
+
+    def shutdown(operation, delay):
+        pass
+
+    def shell(*cmd):
+        pass
+
+    def take_snapshot(path=None):
+        pass
+
+    def remove_package(package):
+        "Android specific feature"
+        pass
+
+    def unlock_screen():
+        pass
+
+    def mouse(type_, x, y, percentage=False):
+        pass
+
+    def whell(notches):
+        pass
+
+    def press_key(type_, keycode):
+        pass
+
 TYPE_ANDROID = "android"
 TYPE_PC = "pc"
 CONNECT_FAIL = "Fail to connect"
