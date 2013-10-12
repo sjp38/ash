@@ -44,6 +44,12 @@ def get_complete_message(token, pre_tokens):
         pre_tokens = pre_tokens[pre_tokens.find(END_OF_MSG) + len(END_OF_MSG):]
     return complete_msgs, pre_tokens
 
+def connect(ip, port=_PORT):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock.connect(ip, port)
+    return sock
+
 def send_expr(sock, expr):
     sock.sendall(expr + END_OF_MSG)
     tokens = ''
