@@ -14,6 +14,7 @@ import threading
 import ash
 
 ASH_CONN_PORT = 13131
+ASH_CONN_DISCONN = "disconnected"
 
 _stop_accepting = False
 _stop_listening = False
@@ -51,12 +52,29 @@ END_OF_MSG = 'end_of_expr'
 
 # combine tokens received from socket, get complete message peer sent.
 def get_complete_message(token, pre_tokens):
+    """Get complete message seperated by END_OF_MSG"""
     pre_tokens += token
     complete_msgs = []
     while END_OF_MSG in pre_tokens:
         complete_msgs.append(pre_tokens[:pre_tokens.find(END_OF_MSG)])
         pre_tokens = pre_tokens[pre_tokens.find(END_OF_MSG) + len(END_OF_MSG):]
     return complete_msgs, pre_tokens
+
+def send_expr(sock, expr):
+    sock.sendall(expr + END_OF_MSG)
+    tokens = ''
+    while True:
+        received = sock.recv(_MAX_SOCKET_BUFFER_SIZE)
+        if not received:
+            print "connection crashed!"
+            sock.close()
+            return (None, ASH_CONN_DISCONN)
+        msgs, tokens = ashmon.get_complete_message(received, tokens)
+        if len(msgs) <= 0:
+            continue
+        for msg in msgs:
+            result = eval(msg)
+            return (result, None)
 
 class _ListenerThread(threading.Thread):
     def __init__(self, conn):
