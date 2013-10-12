@@ -13,13 +13,13 @@ import threading
 
 import ash
 
-ASH_CONN_PORT = 13131
+_ASH_CONN_PORT = 13131
 ASH_CONN_DISCONN = "disconnected"
 
 _stop_accepting = False
 _stop_listening = False
 
-def start_daemon(port=ASH_CONN_PORT):
+def start_daemon(port=_ASH_CONN_PORT):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind(('', port))
