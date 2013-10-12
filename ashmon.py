@@ -18,10 +18,10 @@ ASH_CONN_PORT = 13131
 _stop_accepting = False
 _stop_listening = False
 
-def start_daemon():
+def start_daemon(port=ASH_CONN_PORT):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    s.bind(('', ASH_CONN_PORT))
+    s.bind(('', port))
     s.listen(1)
 
     _stop_listening = False
@@ -68,7 +68,7 @@ class _ListenerThread(threading.Thread):
         while True:
             if _stop_listening:
                 break
-            received = self.conn.recv(1024)
+            received = self.conn.recv(_MAX_SOCKET_BUFFER_SIZE)
             if not received:
                 print "not received! stop listening!"
                 break
