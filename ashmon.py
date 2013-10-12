@@ -13,13 +13,15 @@ import threading
 
 import ash
 
-_ASH_CONN_PORT = 13131
-ASH_CONN_DISCONN = "disconnected"
+_PORT = 13131
+_MAX_SOCKET_BUFFER_SIZE = 1024
+DISCONN = "disconnected"
+END_OF_MSG = 'end_of_expr'
 
 _stop_accepting = False
 _stop_listening = False
 
-def start_daemon(port=_ASH_CONN_PORT):
+def start_daemon(port=_PORT):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind(('', port))
@@ -31,24 +33,6 @@ def start_daemon(port=_ASH_CONN_PORT):
 
 def stop_daemon():
     _stop_accepting = True
-
-class _AcceptorThread(threading.Thread):
-    def __init__(self, sock):
-        self.sock = sock
-
-    def run(self):
-        while True:
-            if _stop_accepting:
-                global _stop_listening
-                _stop_listening = True
-                break
-            conn, addr = self.sock.accept()
-            print "connected by ash. start listener"
-            listener = _ListenerThread(conn)
-            listener.start()
-
-_MAX_SOCKET_BUFFER_SIZE = 1024
-END_OF_MSG = 'end_of_expr'
 
 # combine tokens received from socket, get complete message peer sent.
 def get_complete_message(token, pre_tokens):
@@ -68,13 +52,28 @@ def send_expr(sock, expr):
         if not received:
             print "connection crashed!"
             sock.close()
-            return (None, ASH_CONN_DISCONN)
+            return (None, DISCONN)
         msgs, tokens = ashmon.get_complete_message(received, tokens)
         if len(msgs) <= 0:
             continue
         for msg in msgs:
             result = eval(msg)
             return (result, None)
+
+class _AcceptorThread(threading.Thread):
+    def __init__(self, sock):
+        self.sock = sock
+
+    def run(self):
+        while True:
+            if _stop_accepting:
+                global _stop_listening
+                _stop_listening = True
+                break
+            conn, addr = self.sock.accept()
+            print "connected by ash. start listener"
+            listener = _ListenerThread(conn)
+            listener.start()
 
 class _ListenerThread(threading.Thread):
     def __init__(self, conn):
