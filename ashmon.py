@@ -14,32 +14,35 @@ import threading
 import ash
 
 ASH_CONN_PORT = 13131
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-s.bind(('', ASH_CONN_PORT))
-s.listen(1)
 
 _stop_accepting = False
 _stop_listening = False
 
 def start_daemon():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.bind(('', ASH_CONN_PORT))
+    s.listen(1)
+
     HOST = ''
     _stop_listening = False
-    listener = _AcceptorThread()
+    listener = _AcceptorThread(s)
     listener.start()
 
 def stop_daemon():
     _stop_accepting = True
 
 class _AcceptorThread(threading.Thread):
+    def __init__(self, sock):
+        self.sock = sock
+
     def run(self):
-        global s
         while True:
             if _stop_accepting:
                 global _stop_listening
                 _stop_listening = True
                 break
-            conn, addr = s.accept()
+            conn, addr = self.sock.accept()
             print "connected by ash. start listener"
             listener = _ListenerThread(conn)
             listener.start()
