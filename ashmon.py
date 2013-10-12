@@ -24,7 +24,6 @@ def start_daemon():
     s.bind(('', ASH_CONN_PORT))
     s.listen(1)
 
-    HOST = ''
     _stop_listening = False
     listener = _AcceptorThread(s)
     listener.start()
