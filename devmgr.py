@@ -199,7 +199,7 @@ def _control_android(collect_result, lambda_, *args):
     for dev in _devices:
         if dev[DEV_TYPE_INDX] != TYPE_ANDROID:
             continue
-        if dev[4]:
+        if dev[DEV_FOCUSED_INDX]:
             results.append(lambda_(dev[DEV_CONN_INDX][0], args,
                 dev[DEV_RESOL_INDX]))
     if collect_result:
