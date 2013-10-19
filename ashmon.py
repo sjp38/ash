@@ -35,9 +35,10 @@ def stop_daemon():
 
 def connectable_with(ip, port):
     try:
-        connect(ip, port)
+        s = connect(ip, port)
     except Exception, e:
         return False
+    s.close()
     return True
 
 # combine tokens received from socket, get complete message peer sent.
