@@ -142,11 +142,11 @@ def devices(scan_area="192.168.1", scan_port=ashmon.DEFAULT_PORT):
         name = f.readlines()[0][0:-1]
         f.close()
 
-        parsed.append("%s\t%s\t%s" % (TYPE_ANDROID, devid, name))
+        parsed.append("%s\t%s\t%s" % (_Device.TYPE_ANDROID, devid, name))
     for i in range(256):
         ip = "%s.%d" % i
         if ashmon.connectable_with(ip):
-            parsed.append("%s\t%s" % (TYPE_PC, ip))
+            parsed.append("%s\t%s" % (_Device.TYPE_PC, ip))
     return parsed
 
 def connected_devices(develop_view=None):
@@ -218,7 +218,7 @@ def _recycle_connected(device_id):
 def _connect_devmgr(devid, type_):
     if _recycle_connected(devid):
         return
-    if type_ == TYPE_ANDROID:
+    if type_ == _Device.TYPE_ANDROID:
         # TODO: Connect android via ip. Currently, only serial.
         mdev = MonkeyRunner.waitForConnection(MONK_CONN_TIMEOUT, devid)
         #TODO: Install/start AGI from here
@@ -227,13 +227,14 @@ def _connect_devmgr(devid, type_):
         name = mdev.getProperty("build.model")
         resolution = [int(mdev.getProperty("display.width")),
                 int(mdev.getProperty("display.height"))]
-        _devices.append([TYPE_ANDROID, devid, name,
+        _devices.append([_Device.TYPE_ANDROID, devid, name,
                 [mdev, agiconn], focused, resolution])
-    elif type_ == TYPE_PC:
+    elif type_ == _Device.TYPE_PC:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock.connect((devid, _DEVMGR_PORT))
-        _devices.append([TYPE_PC, devid, devid, [sock], False, [1024, 768]])
+        _devices.append([_Device.TYPE_PC, devid, devid,
+            [sock], False, [1024, 768]])
 
 # if type_ is none, id_ is just index from devices list.
 def connect(id_, type_=None):
@@ -247,7 +248,7 @@ def connect(id_, type_=None):
         dev_base_info = devices_[nth].split()
         devid = dev_base_info[1]
         # TODO: Support PC connection via index, too.
-        _connect_devmgr(devid, TYPE_ANDROID)
+        _connect_devmgr(devid, _Device.TYPE_ANDROID)
     else:
         return _connect_devmgr(id_, type_)
 
@@ -269,7 +270,7 @@ def focus(*nths):
 def _control_android(collect_result, lambda_, *args):
     results = []
     for dev in _devices:
-        if dev[DEV_TYPE_INDX] != TYPE_ANDROID:
+        if dev[DEV_TYPE_INDX] != _Device.TYPE_ANDROID:
             continue
         if dev[DEV_FOCUSED_INDX]:
             results.append(lambda_(dev[DEV_CONN_INDX][0], args,
@@ -416,7 +417,7 @@ def wake():
 def _control_pc(collect_result, expr):
     results = []
     for dev in _devices:
-        if dev[DEV_TYPE_INDX] != TYPE_PC:
+        if dev[DEV_TYPE_INDX] != _Device.TYPE_PC:
             continue
         if dev[DEV_FOCUSED_INDX]:
             sock = dev[DEV_CONN_INDX][0]
