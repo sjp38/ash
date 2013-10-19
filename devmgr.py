@@ -480,46 +480,11 @@ def release_key(keycode, target_me=False):
     if not target_me:
         return _control_pc(False, "release_key %s True" % keycode)
 
-def start_devmgrmon():
-    return OFFICIAL_AGAIN_BY_VERSION3
-    _stop_listening = False
-    _stop_accepting = False
-    acceptor = _AcceptorThread()
-    acceptor.start()
+def accept_remote_connection():
+    ashmon.start_deamon()
 
-class _AcceptorThread(threading.Thread):
-    def run(self):
-        global waiter_sock
-        while True:
-            if _stop_accepting:
-                global _stop_listening
-                _stop_listening = False
-                break
-            conn, addr = waiter_sock.accept()
-            print "devmgr connected by ash. start listener"
-            listener = _ListenerThread(conn)
-            listener.start()
-
-class _ListenerThread(threading.Thread):
-    def __init__(self, conn):
-        threading.Thread.__init__(self)
-        self.conn = conn
-
-    def run(self):
-        tokens = ''
-        while True:
-            if _stop_listening:
-                break
-            received = self.conn.recv(1024)
-            if not received:
-                print "devmgr not received! stop listening!"
-                break
-            msgs, tokens = ashmon.get_complete_message(received, tokens)
-            for msg in msgs:
-                result = ash.input(msg)
-                self.conn.sendall("%s%s" % (result, ashmon.END_OF_MSG))
-        self.conn.close()
-
+def block_remote_connection():
+    ashmon.stop_daemon()
 
 # Device connection lookup thread.
 class _DeviceLookupThread(threading.Thread):
