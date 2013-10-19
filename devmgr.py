@@ -144,8 +144,8 @@ def devices(scan_area="192.168.1", scan_port=ashmon.DEFAULT_PORT):
 
         parsed.append("%s\t%s\t%s" % (_Device.TYPE_ANDROID, devid, name))
     for i in range(256):
-        ip = "%s.%d" % i
-        if ashmon.connectable_with(ip):
+        ip = "%s.%d" % (scan_area, i)
+        if ashmon.connectable_with(ip, scan_port):
             parsed.append("%s\t%s" % (_Device.TYPE_PC, ip))
     return parsed
 
