@@ -13,7 +13,7 @@ import threading
 
 import ash
 
-_PORT = 13131
+DEFAULT_PORT = 13131
 _MAX_SOCKET_BUFFER_SIZE = 1024
 DISCONN = "disconnected"
 END_OF_MSG = 'end_of_expr'
@@ -21,7 +21,7 @@ END_OF_MSG = 'end_of_expr'
 _stop_accepting = False
 _stop_listening = False
 
-def start_daemon(port=_PORT):
+def start_daemon(port=DEFAULT_PORT):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind(('', port))
@@ -43,7 +43,7 @@ def get_complete_message(token, pre_tokens):
         pre_tokens = pre_tokens[pre_tokens.find(END_OF_MSG) + len(END_OF_MSG):]
     return complete_msgs, pre_tokens
 
-def connect(ip, port=_PORT):
+def connect(ip, port=DEFAULT_PORT):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.connect(ip, port)
