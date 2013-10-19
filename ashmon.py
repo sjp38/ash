@@ -77,11 +77,11 @@ class _AcceptorThread(threading.Thread):
                 _stop_listening = True
                 break
             conn, addr = self.sock.accept()
-            print "connected by ash. start listener"
-            listener = _ListenerThread(conn)
-            listener.start()
+            print "connected by ash. start reader"
+            reader = _ReaderThread(conn)
+            reader.start()
 
-class _ListenerThread(threading.Thread):
+class _ReaderThread(threading.Thread):
     def __init__(self, conn):
         threading.Thread.__init__(self)
         self.conn = conn
