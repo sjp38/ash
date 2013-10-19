@@ -117,9 +117,7 @@ def start_ashdi():
 def _get_code(expr):
     if not isinstance(expr, list) or not isinstance(expr[0], str):
         return False
-# For test, manually switch commenting...
     for module in [ash, ashmon, data, sys.modules[__name__], devmgr]:
-#    for module in [ash, ashmon, data, sys.modules[__name__]]:
         if hasattr(module, expr[0]):
             f = getattr(module, expr[0])
             if hasattr(f, '__call__'):
