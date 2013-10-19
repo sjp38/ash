@@ -131,6 +131,9 @@ def devices(scan_area="192.168.1", scan_port=ashmon.DEFAULT_PORT):
     f.close()
     parsed = []
     for result in results[1:-1]:
+        spltd = result.split()
+        if spltd[1] != "device":
+            continue
         devid = result.split()[0]
         f = os.popen("adb -s %s shell getprop ro.product.model" % devid)
         name = f.readlines()[0][0:-1]
