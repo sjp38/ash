@@ -28,8 +28,7 @@ def start_daemon(port=_PORT):
     s.listen(1)
 
     _stop_listening = False
-    listener = _AcceptorThread(s)
-    listener.start()
+    _AcceptorThread(s).start()
 
 def stop_daemon():
     _stop_accepting = True
