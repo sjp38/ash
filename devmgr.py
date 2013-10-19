@@ -96,8 +96,6 @@ _AGI_CONN_PORT_HEAD = 6789
 _AGI_CONN_PORT_TAIL = 9789
 _agi_conn_port = _AGI_CONN_PORT_HEAD
 
-_DEVMGR_PORT = 10101
-
 DEV_TYPE_INDX = 0
 DEV_ID_INDX = 1
 DEV_NAME_INDX = 2
@@ -120,10 +118,6 @@ _stop_device_lookup_thread = False
 
 _stop_accepting = False
 _stop_listening = False
-waiter_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-waiter_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-waiter_sock.bind(('', _DEVMGR_PORT))
-waiter_sock.listen(1)
 
 OFFICIAL_AGAIN_BY_VERSION3 = """
 Hidden feature
@@ -232,7 +226,7 @@ def _connect_devmgr(devid, type_):
     elif type_ == _Device.TYPE_PC:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        sock.connect((devid, _DEVMGR_PORT))
+        #sock.connect((devid, _DEVMGR_PORT))
         _devices.append([_Device.TYPE_PC, devid, devid,
             [sock], False, [1024, 768]])
 
