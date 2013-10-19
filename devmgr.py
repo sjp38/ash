@@ -32,19 +32,17 @@ Field
         It can be tcp/ip or bluetooth or anything.
         But, should able to use duck typing using read / write.
     focused: whether this device is focused
-    resolution: screen resolution of this device
     """
 
     TYPE_ANDROID = "android"
     TYPE_PC = "pc"
 
-    def __init__(self, type_, address, name, conn, focused, resolution):
+    def __init__(self, type_, address, name, conn, focused):
         self.type_ = type_
         self.addr = address
         self.name = name
         self.ashconn = conn
         self.focused = focused
-        self.resolution = resolution
 
     def __str__(self):
         return """
