@@ -35,6 +35,9 @@ Field
     resolution: screen resolution of this device
     """
 
+    TYPE_ANDROID = "android"
+    TYPE_PC = "pc"
+
     def __init__(self, type_, address, name, conn, focused, resolution):
         self.type_ = type_
         self.addr = address
@@ -86,8 +89,6 @@ Field
     def press_key(type_, keycode):
         pass
 
-TYPE_ANDROID = "android"
-TYPE_PC = "pc"
 CONNECT_FAIL = "Fail to connect"
 FOCUS_FAIL = "Fail to focus"
 
