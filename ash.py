@@ -19,7 +19,6 @@ import sys
 #    os.chdir(srcFileDir)
 #    sys.path = [srcFileDir] + sys.path
 
-import ashmon
 import ashval
 import log
 
