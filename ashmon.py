@@ -74,6 +74,7 @@ def send_expr(sock, expr):
 
 class _AcceptorThread(threading.Thread):
     def __init__(self, sock):
+        threading.Thread.__init__(self)
         self.sock = sock
 
     def run(self):
