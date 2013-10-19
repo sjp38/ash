@@ -483,7 +483,7 @@ def release_key(keycode, target_me=False):
         return _control_pc(False, "release_key %s True" % keycode)
 
 def accept_remote_connection():
-    ashmon.start_deamon()
+    ashmon.start_daemon()
 
 def block_remote_connection():
     ashmon.stop_daemon()
