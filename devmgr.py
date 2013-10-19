@@ -14,7 +14,7 @@ import socket
 import threading
 import time
 
-import ash
+import ashmon
 
 class _Device:
     """
@@ -130,8 +130,8 @@ Hidden feature
 
 Will be publicated again or deprecated officially by v3.0"""
 
-def devices():
-    return OFFICIAL_AGAIN_BY_VERSION3
+def devices(scan_area="192.168.1", scan_port=ashmon.DEFAULT_PORT):
+    "Scan devices"
     f = os.popen("adb devices")
     results = f.readlines()
     f.close()
@@ -143,7 +143,10 @@ def devices():
         f.close()
 
         parsed.append("%s\t%s\t%s" % (TYPE_ANDROID, devid, name))
-    #TODO: See PCs.
+    for i in range(256):
+        ip = "%s.%d" % i
+        if ashmon.connectable_with(ip):
+            parsed.append("%s\t%s" % (TYPE_PC, ip))
     return parsed
 
 def connected_devices(develop_view=None):

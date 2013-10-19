@@ -33,6 +33,13 @@ def start_daemon(port=DEFAULT_PORT):
 def stop_daemon():
     _stop_accepting = True
 
+def connectable_with(ip, port):
+    try:
+        connect(ip, port)
+    except Exception, e:
+        return False
+    return True
+
 # combine tokens received from socket, get complete message peer sent.
 def get_complete_message(token, pre_tokens):
     """Get complete message seperated by END_OF_MSG"""
