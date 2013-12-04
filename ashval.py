@@ -16,7 +16,7 @@ import ashmon
 import data
 #TODO: Make monkey-dependant part unittest-able
 import devmgr
-import ashdi
+#import ashdi
 
 RECORD_FILTER = ("arg", "record", "record_stop")
 
