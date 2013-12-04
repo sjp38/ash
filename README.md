@@ -55,6 +55,8 @@ If you have _Galaxy Nexus_ and want to control it from PC, install [_AshFa_](htt
 
 `$ ./ash.py init_di_maguro.ash`
 
+# Test
+Just `./run_test.py`
 
 # Note
 Current version is still *not stable*.
