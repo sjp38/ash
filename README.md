@@ -34,10 +34,6 @@ You can see demo video of ash from [Youtube](http://www.youtube.com/watch?gl=KR&
  - ash 2.0 have announced from [Google HackFair, Korea](http://googlekoreablog.blogspot.kr/2012/11/google-hackfair_6.html) and released by 19th, November 2012(EST).
  - Next minor version update will be done by few months.
 
-# License
-GPL v3.
-Anyone can use code of Ash everywhere. But, should follow limitation of GPL v3.(http://www.gnu.org/licenses/gpl-3.0.html)
-
 
 # System requirements
 Just works on _Ubuntu 12.04_ with _JRE_ and _Android SDK tools_.
